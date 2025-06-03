@@ -20,9 +20,31 @@ const ENABLE_DETAILED_LOGS = false;
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Configurar CORS dinámicamente según el entorno
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://*.railway.app', 'https://*.up.railway.app'] // Railway domains
+  : ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://localhost']; // Local development
+
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://localhost'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (process.env.NODE_ENV === 'production') {
+      // In production, allow Railway domains
+      if (origin.includes('.railway.app') || origin.includes('.up.railway.app')) {
+        return callback(null, true);
+      }
+    } else {
+      // In development, allow localhost
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-wallet-address'],
   credentials: true
