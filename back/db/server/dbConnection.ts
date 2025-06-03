@@ -6,23 +6,20 @@ dotenv.config();
 // Aumentar tiempos de conexión y opciones de reconexión
 const connectDB = async (): Promise<void> => {
   try {
-    // Verifica múltiples posibles variables de entorno para la URI de MongoDB
+    // Usar directamente la URI de MongoDB Atlas para desarrollo
     const mongoURI = process.env.MONGO_URI || 
                       process.env.MONGODB_URI || 
                       process.env.DB_URI || 
-                      'mongodb://localhost:27017/default';
+                      'mongodb+srv://vicridev:OvDwlhYiLfdOdhSS@db.e0byx.mongodb.net/?retryWrites=true&w=majority';
     
-    console.log('Conectando a MongoDB...');
+    console.log('Conectando a MongoDB Atlas...');
     
-    // Opciones de conexión mejoradas
+    // Opciones de conexión mejoradas para Atlas
     const options = {
-      serverSelectionTimeoutMS: 30000, // Tiempo de selección de servidor aumentado
-      connectTimeoutMS: 30000, // Timeout de conexión aumentado
-      socketTimeoutMS: 45000, // Timeout de socket aumentado
-      heartbeatFrequencyMS: 5000, // Frecuencia de heartbeat reducida
-      // Forzar el nuevo parser de URL
-      useNewUrlParser: true as any,
-      useUnifiedTopology: true as any
+      serverSelectionTimeoutMS: 10000, // Reducido para Atlas
+      connectTimeoutMS: 10000, // Reducido para Atlas
+      socketTimeoutMS: 45000,
+      heartbeatFrequencyMS: 5000,
     };
     
     const connection = await mongoose.connect(mongoURI, options);
@@ -36,10 +33,10 @@ const connectDB = async (): Promise<void> => {
       console.warn('La conexión a MongoDB se ha desconectado');
     });
     
-    console.log(`MongoDB Conectado: ${connection.connection.host}`);
+    console.log(`MongoDB Atlas Conectado: ${connection.connection.host}`);
     console.log(`Base de datos: ${connection.connection.name}`);
   } catch (error) {
-    console.error('Error al conectar a MongoDB:');
+    console.error('Error al conectar a MongoDB Atlas:');
     console.error(`Mensaje: ${error instanceof Error ? error.message : 'Error desconocido'}`);
     console.error(`Tipo de error: ${error instanceof Error ? error.name : 'Desconocido'}`);
     
@@ -52,7 +49,7 @@ const connectDB = async (): Promise<void> => {
       console.error('Cerrando aplicación debido a error crítico de base de datos');
       process.exit(1);
     } else {
-      console.warn('Error de conexión a MongoDB en modo desarrollo - continuando sin BD');
+      console.warn('Error de conexión a MongoDB Atlas en modo desarrollo - reintentando...');
     }
   }
 };
