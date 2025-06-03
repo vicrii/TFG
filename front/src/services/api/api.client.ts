@@ -1,5 +1,15 @@
 // Configuración del cliente API base
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const getApiUrl = () => {
+  // En desarrollo, usar la variable de entorno o localhost
+  if (import.meta.env.DEV) {
+    return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  }
+  
+  // En producción (Railway), usar ruta relativa ya que frontend y backend están en el mismo dominio
+  return '/api';
+};
+
+const API_URL = getApiUrl();
 
 // Timeout para las solicitudes en ms - aumentado para operaciones de analytics
 const TIMEOUT_MS = 15000; // 15 segundos
