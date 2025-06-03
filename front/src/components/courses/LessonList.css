@@ -1,0 +1,214 @@
+.hover-shadow {
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 .5rem 1rem rgba(var(--bs-body-color-rgb), .15);
+}
+
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Dark mode overrides with high specificity */
+[data-bs-theme='dark'] .card,
+[data-bs-theme='dark'] .modal-content {
+  background-color: #1a1a1a !important;
+  border-color: #2d2d2d !important;
+}
+
+[data-bs-theme='dark'] .card-header,
+[data-bs-theme='dark'] .modal-header,
+[data-bs-theme='dark'] .modal-footer {
+  background-color: #1a1a1a !important;
+  border-color: #2d2d2d !important;
+}
+
+[data-bs-theme='dark'] .lesson-text,
+[data-bs-theme='dark'] h3,
+[data-bs-theme='dark'] h5,
+[data-bs-theme='dark'] .form-label,
+[data-bs-theme='dark'] .modal-title {
+  color: #ffffff !important;
+}
+
+[data-bs-theme='dark'] .lesson-description,
+[data-bs-theme='dark'] p {
+  color: #e1e1e1 !important;
+}
+
+[data-bs-theme='dark'] .lesson-meta,
+[data-bs-theme='dark'] small,
+[data-bs-theme='dark'] .form-text {
+  color: #cccccc !important;
+}
+
+[data-bs-theme='dark'] .lesson-item {
+  background-color: #242424 !important;
+  border: 1px solid #2d2d2d !important;
+}
+
+[data-bs-theme='dark'] .lesson-item:hover {
+  background-color: #2d2d2d !important;
+}
+
+[data-bs-theme='dark'] .form-control {
+  background-color: #242424 !important;
+  border-color: #2d2d2d !important;
+  color: #ffffff !important;
+}
+
+[data-bs-theme='dark'] .form-control:focus {
+  background-color: #2d2d2d !important;
+  border-color: #3d3d3d !important;
+  box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-bs-theme='dark'] .btn-outline-primary {
+  color: #ffffff !important;
+  border-color: #0d6efd !important;
+}
+
+[data-bs-theme='dark'] .btn-outline-primary:hover {
+  color: #ffffff !important;
+  background-color: #0d6efd !important;
+}
+
+[data-bs-theme='dark'] .btn-outline-secondary {
+  color: #ffffff !important;
+  border-color: #6c757d !important;
+}
+
+[data-bs-theme='dark'] .btn-outline-secondary:hover {
+  color: #ffffff !important;
+  background-color: #6c757d !important;
+}
+
+[data-bs-theme='dark'] .btn-outline-danger {
+  color: #ffffff !important;
+  border-color: #dc3545 !important;
+}
+
+[data-bs-theme='dark'] .btn-outline-danger:hover {
+  color: #ffffff !important;
+  background-color: #dc3545 !important;
+}
+
+[data-bs-theme='dark'] .alert-info {
+  background-color: #242424 !important;
+  border-color: #2d2d2d !important;
+  color: #ffffff !important;
+}
+
+[data-bs-theme='dark'] .list-group-item-action:focus,
+[data-bs-theme='dark'] .list-group-item-action:hover {
+  background-color: #2d2d2d !important;
+}
+
+/* Estilos para la lista de lecciones */
+.lesson-item {
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.lesson-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+}
+
+.lesson-item.completed {
+  background-color: #f8fff9;
+  border-left: 4px solid #198754;
+}
+
+.lesson-text {
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.lesson-description {
+  color: #6c757d;
+  line-height: 1.4;
+}
+
+.lesson-meta {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.lesson-progress {
+  height: 8px;
+  border-radius: 4px;
+}
+
+/* Estilos específicos para badges de quiz y ejercicios completados */
+.lesson-meta.badge-success {
+  background-color: #198754 !important;
+  color: white !important;
+  font-weight: 600;
+  border: 1px solid #198754;
+}
+
+.lesson-meta.badge-info {
+  background-color: #0dcaf0 !important;
+  color: white !important;
+  font-weight: 500;
+  border: 1px solid #0dcaf0;
+}
+
+/* Mejoras visuales para lecciones completadas */
+.lesson-item.completed .lesson-text {
+  color: #198754 !important;
+  font-weight: 700;
+}
+
+.lesson-item.completed .badge-success {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(25, 135, 84, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(25, 135, 84, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(25, 135, 84, 0);
+  }
+}
+
+/* Estilos para el modal de confirmación de eliminación */
+.bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+/* Animación suave para el modal de eliminación */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+  transform: scale(1);
+}
+
+/* Hover effects para botones del modal */
+.modal-footer .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para modo oscuro del modal de eliminación */
+[data-bs-theme='dark'] .bg-danger-subtle {
+  background-color: rgba(220, 53, 69, 0.2) !important;
+}
+
+[data-bs-theme='dark'] .bg-light {
+  background-color: #2d2d2d !important;
+  color: #ffffff !important;
+}
+
+[data-bs-theme='dark'] .text-muted {
+  color: #cccccc !important;
+} 

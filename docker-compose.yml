@@ -1,0 +1,63 @@
+services:
+  # Aplicación Solana Learning (Backend + Frontend)
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb+srv://vicridev:OvDwlhYiLfdOdhSS@db.e0byx.mongodb.net/?retryWrites=true&w=majority
+      - FRONTEND_URL=https://3.89.10.184
+    restart: unless-stopped
+    networks:
+      - solana-network
+
+  # Nginx con SSL
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ssl_certs:/etc/ssl/certs
+      - ssl_private:/etc/ssl/private
+    depends_on:
+      - app
+      - ssl-generator
+    restart: unless-stopped
+    networks:
+      - solana-network
+
+  # Generador de certificados SSL
+  ssl-generator:
+    image: alpine:latest
+    volumes:
+      - ssl_certs:/etc/ssl/certs
+      - ssl_private:/etc/ssl/private
+    command: >
+      sh -c "
+        apk add --no-cache openssl &&
+        if [ ! -f /etc/ssl/certs/nginx-selfsigned.crt ]; then
+          mkdir -p /etc/ssl/private /etc/ssl/certs &&
+          openssl req -x509 -nodes -days 365 -newkey rsa:2048 
+            -keyout /etc/ssl/private/nginx-selfsigned.key 
+            -out /etc/ssl/certs/nginx-selfsigned.crt 
+            -subj '/C=US/ST=VA/L=Ashburn/O=SolanaLearn/CN=3.89.10.184' &&
+          chmod 600 /etc/ssl/private/nginx-selfsigned.key &&
+          chmod 644 /etc/ssl/certs/nginx-selfsigned.crt &&
+          echo 'SSL certificates generated successfully'
+        else
+          echo 'SSL certificates already exist'
+        fi
+      "
+
+volumes:
+  app_data:
+  ssl_certs:
+  ssl_private:
+
+networks:
+  solana-network:
+    driver: bridge 

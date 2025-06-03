@@ -1,0 +1,1510 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em color-mix(in srgb, var(--accent-color-primary) 50%, transparent));
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: var(--text-subtle-color);
+}
+
+.wallet-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.token-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.token-item {
+  background: var(--item-bg-color);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-color);
+}
+
+.token-symbol {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.token-amount {
+  color: var(--accent-color-success);
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.transaction-item {
+  background: var(--item-bg-color);
+  border-radius: 8px;
+  padding: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.tx-type {
+  font-weight: bold;
+}
+
+.tx-date {
+  color: var(--text-muted-color);
+}
+
+.tx-status.success {
+  color: var(--accent-color-success);
+}
+
+.tx-status.failed {
+  color: var(--accent-color-danger);
+}
+
+.tx-link {
+  text-align: right;
+  color: var(--accent-color-primary);
+  text-decoration: none;
+}
+
+.tx-link:hover {
+  color: var(--accent-color-primary-darker);
+  text-decoration: underline;
+}
+
+/* Añade estos estilos para el spinner al final del archivo */
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--border-color-transparent);
+  border-radius: 50%;
+  border-top-color: var(--accent-color-primary);
+  animation: spin 1s ease-in-out infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: var(--text-muted-color);
+}
+
+/* Estilos para la paginación */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.pagination-button {
+  background-color: var(--secondary-bg-color);
+  border: 1px solid var(--accent-color-primary);
+  color: var(--accent-color-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: var(--accent-color-primary);
+  color: var(--bg-color);
+}
+
+.pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-info {
+  color: var(--text-muted-color);
+  font-size: 0.9rem;
+}
+
+/* Mantén tus estilos existentes y añade los siguientes */
+
+/* Estilos generales */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  padding-top: 72px; /* Espacio para el navbar fijo */
+}
+
+/* Estilos del encabezado y hero */
+.hero-section {
+  padding: 3rem 0;
+  background: var(--hero-bg-gradient);
+  color: var(--hero-text-color);
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.hero-image {
+  filter: drop-shadow(0 0 0.75rem color-mix(in srgb, var(--accent-color-primary) 40%, transparent));
+}
+
+/* Estilos para las tarjetas de características */
+.feature-card {
+  border: none;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border-radius: 0.375rem;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow-lg);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color-primary);
+}
+
+/* Estilos para información de wallet */
+.wallet-overview-card {
+  background-color: white;
+  border: none;
+  box-shadow: var(--card-shadow);
+}
+
+.wallet-address {
+  word-break: break-all;
+  background-color: var(--code-bg);
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.sol-balance {
+  color: var(--accent-color-primary);
+  font-weight: bold;
+}
+
+.sol-balance small {
+  color: var(--text-muted-color);
+  font-weight: normal;
+}
+
+/* Estilos para tokens */
+.token-list-bootstrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.token-item-bootstrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: var(--item-bg-color);
+  border-radius: 0.25rem;
+  color: var(--text-color);
+}
+
+.token-symbol-bootstrap {
+  font-weight: bold;
+}
+
+.token-amount-bootstrap {
+  color: var(--accent-color-primary);
+}
+
+/* Estilos para transacciones */
+.transaction-list-bootstrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.transaction-item-bootstrap {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--item-bg-color);
+  border-radius: 0.25rem;
+  color: var(--text-color);
+}
+
+.tx-type-bootstrap {
+  font-weight: bold;
+}
+
+.tx-date-bootstrap {
+  color: var(--text-muted-color);
+  font-size: 0.875rem;
+}
+
+.pagination-controls-bootstrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilos para el footer */
+.footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 2rem;
+  color: var(--text-muted-color);
+}
+
+/* Estilos para el botón de wallet */
+.nav-wallet-button .wallet-adapter-button {
+  background-color: var(--accent-color-primary) !important;
+  transition: background-color 0.2s ease;
+}
+
+.nav-wallet-button .wallet-adapter-button:hover {
+  background-color: var(--accent-color-primary-darker) !important;
+}
+
+/* Spinner pequeño */
+.loading-spinner-sm {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--border-color-transparent);
+  border-radius: 50%;
+  border-top-color: var(--accent-color-primary);
+  animation: spin 1s ease-in-out infinite;
+}
+
+/* Estilos para la página principal */
+.blur-effect {
+  filter: blur(30px);
+  opacity: 0.2;
+  background: linear-gradient(45deg, var(--accent-color-primary), var(--accent-color-success));
+  border-radius: 16px;
+  z-index: -1;
+}
+
+.feature-highlight-card {
+  border: none;
+  box-shadow: var(--card-shadow);
+  z-index: 1;
+}
+
+.feature-icon-container {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--accent-color-primary-bg-transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.feature-icon-container > * {
+  color: var(--accent-color-primary);
+}
+
+.course-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border: none;
+  box-shadow: var(--card-shadow);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow-lg);
+}
+
+
+.min-vh-100 {
+  min-height: 100vh;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+/* Estilos para ancho máximo */
+.container-fluid-max {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Animaciones y transiciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-on-load {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+
+/* Hover effects para cards */
+.course-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Efecto de transición para componentes cargados */
+.fade-in-component {
+  animation: fadeInComponent 0.5s ease-out forwards;
+}
+
+@keyframes fadeInComponent {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #212529;
+  --text-muted-color: #6c757d; 
+  --text-subtle-color: #888; 
+  --secondary-bg-color: #f8f9fa; 
+  --item-bg-color: #f8f9fa; 
+  --card-bg: #ffffff;
+  --code-bg: #e9ecef; 
+  --border-color: #dee2e6;
+  --border-color-transparent: rgba(0, 0, 0, 0.1); 
+  --link-color: #0d6efd;
+
+  --accent-color-primary: #9945FF; 
+  --accent-color-primary-darker: #8035e0; 
+  --accent-color-primary-bg-transparent: rgba(153, 69, 255, 0.1);
+  --accent-color-success: #14F195;
+  --accent-color-danger: #dc3545; 
+
+  --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --card-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+  --hero-bg-gradient: linear-gradient(to right, #f8f9fa, #e9ecef); 
+  --hero-text-color: var(--text-color);
+
+
+  --bs-body-bg: var(--bg-color);
+  --bs-body-color: var(--text-color);
+  --bs-secondary-bg: var(--secondary-bg-color);
+  --bs-tertiary-bg: var(--item-bg-color);
+  --bs-border-color: var(--border-color);
+  --bs-link-color: var(--link-color);
+  --bs-link-hover-color: color-mix(in srgb, var(--link-color) 80%, black);
+  --bs-card-bg: var(--card-bg);
+  --bs-card-box-shadow: var(--card-shadow);
+}
+
+
+[data-bs-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-muted-color: #adb5bd;
+  --text-subtle-color: #888; 
+  --secondary-bg-color: #2c2c2c;
+  --item-bg-color: #252525; 
+  --card-bg: #212121; 
+  --code-bg: #343a40;
+  --border-color: #495057;
+  --border-color-transparent: rgba(255, 255, 255, 0.1); 
+  --link-color: #6ea8fe;
+
+  --accent-color-primary: #a972ff; 
+  --accent-color-primary-darker: #9945FF; 
+  --accent-color-primary-bg-transparent: rgba(169, 114, 255, 0.15);
+
+
+  --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+  --card-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+
+  --hero-bg-gradient: linear-gradient(to right, #000000, #1a1a2e); 
+  --hero-text-color: #ffffff;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.my-custom-container {
+  background-color: var(--secondary-bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+
+.my-custom-link {
+  color: var(--link-color);
+}
+
+
+.w-100 {
+    width: 100% !important;
+}
+
+/* --- Estilos Mejorados para AppNavbar --- */
+.app-navbar {
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--card-bg) !important;
+}
+
+.navbar-brand-custom {
+  transition: transform 0.2s ease-in-out;
+}
+
+.navbar-brand-custom:hover {
+  transform: scale(1.03);
+}
+
+.nav-link-custom {
+  color: var(--text-color) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.nav-link-custom:hover {
+  background-color: var(--secondary-bg-color);
+  color: var(--accent-color-primary) !important;
+}
+
+.nav-link-custom.active {
+  color: var(--accent-color-primary) !important;
+  font-weight: 700;
+  background-color: transparent !important;
+}
+
+.nav-separator {
+  height: 25px;
+  width: 1px;
+  background-color: var(--border-color);
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+/* Ajustar el botón de Wallet */
+.nav-wallet-button .wallet-adapter-button {
+  font-size: 0.9rem !important;
+  padding: 0.5rem 1rem !important;
+  background-color: var(--accent-color-primary) !important;
+  color: white !important;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.nav-wallet-button .wallet-adapter-button:hover {
+  background-color: var(--accent-color-primary-darker) !important;
+}
+
+/* --- Estilos Mejorados para AppFooter --- */
+.app-footer {
+  border-top: 1px solid var(--border-color);
+  background-color: var(--secondary-bg-color) !important;
+}
+
+.app-footer .small {
+  font-size: 0.875rem;
+  color: var(--text-muted-color);
+}
+
+/* --- Estilos Mejorados para HomePage --- */
+.home-page {
+  /* Puedes añadir un fondo general si quieres, pero las secciones ya lo tienen */
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  position: relative;
+}
+
+.hero-logo {
+  max-height: 80px;
+  filter: drop-shadow(0 4px 15px rgba(255, 255, 255, 0.2));
+}
+
+.hero-section h1 {
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section .lead {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.15rem;
+}
+
+.feature-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.feature-icon {
+  color: var(--accent-color-primary);
+}
+
+/* Sección "Cómo Empezar" */
+.step-number {
+  background-color: var(--accent-color-primary);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Ajustes para tarjetas de curso */
+.course-card {
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+}
+
+.course-card .card-img-top {
+  height: 180px;
+  object-fit: cover;
+}
+
+.course-level {
+    display: inline-block;
+    padding: 0.25em 0.6em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+    color: #fff;
+}
+.course-level.beginner { background-color: #198754; }
+.course-level.intermediate { background-color: #ffc107; color: #000; }
+.course-level.advanced { background-color: #dc3545; }
+
+/* ===== NUEVOS ESTILOS PARA NAVBAR Y MEJORAS GENERALES ===== */
+
+/* Estilos del Navbar */
+.navbar-custom {
+  transition: all 0.3s ease-in-out;
+  padding: 0.8rem 1rem;
+}
+
+.navbar-custom.scrolled {
+  padding: 0.4rem 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-bs-theme="light"] .navbar-custom.scrolled {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-bs-theme="dark"] .navbar-custom.scrolled {
+  background-color: rgba(25, 25, 25, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.theme-toggle-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  padding: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle-btn:hover {
+  transform: rotate(30deg);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-bs-theme="dark"] .theme-toggle-btn {
+  color: #ffd700;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+[data-bs-theme="light"] .theme-toggle-btn {
+  color: #495057;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced animations for nav items */
+.nav-item-custom {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item-custom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--accent-color-primary);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-item-custom:hover::after,
+.nav-item-custom.active::after {
+  width: 80%;
+}
+
+/* Enhanced brand animation */
+.brand-animation {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.brand-animation:hover {
+  transform: scale(1.05);
+}
+
+.brand-animation:hover .brand-logo-img {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animación y estilos del brand */
+.brand-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-logo-img {
+  transition: all 0.3s ease;
+}
+
+.brand-animation:hover .brand-logo-img {
+  transform: rotate(10deg);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, var(--accent-color-primary), #14F195);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+}
+
+.brand-tagline {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-top: -5px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+/* Estilos para los ítems de navegación */
+.nav-item-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 3px;
+  padding: 8px 16px !important;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.nav-item-custom:hover {
+  background-color: var(--accent-color-primary-bg-transparent);
+  transform: translateY(-2px);
+}
+
+.nav-item-custom.active {
+  color: var(--accent-color-primary) !important;
+  background-color: var(--accent-color-primary-bg-transparent);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.nav-item-custom:hover .nav-icon {
+  transform: translateY(-1px);
+}
+
+/* Estilos para el dropdown */
+.nav-dropdown-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-dropdown-title.active {
+  color: var(--accent-color-primary);
+  font-weight: 600;
+}
+
+.nav-dropdown-custom .dropdown-menu {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow-lg);
+  border: 1px solid var(--border-color-transparent);
+  padding: 8px;
+}
+
+.dropdown-item-custom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin: 2px 0;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item-custom:hover {
+  background-color: var(--accent-color-primary-bg-transparent) !important;
+}
+
+.dropdown-icon {
+  color: var(--accent-color-primary);
+  font-size: 1rem;
+}
+
+/* Wallet button wrapper */
+.nav-wallet-wrapper {
+  margin-left: 10px;
+}
+
+/* Mejoras para estilos globales */
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color-transparent);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--card-shadow-lg);
+}
+
+.card-header {
+  border-bottom: 1px solid var(--border-color-transparent);
+  font-weight: 600;
+}
+
+.btn {
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary, .btn-success {
+  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary:hover, .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-primary:active, .btn-success:active {
+  transform: translateY(1px);
+}
+
+/* Modos de tema */
+[data-bs-theme="light"] {
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --text-muted-color: #6c757d;
+  --text-subtle-color: #495057;
+  --secondary-bg-color: #e9ecef;
+  --item-bg-color: #ffffff;
+  --card-bg: #ffffff;
+  --code-bg: #f8f9fa;
+  --border-color: #dee2e6;
+  --border-color-transparent: rgba(0, 0, 0, 0.1);
+  --link-color: #0d6efd;
+
+  --accent-color-primary: #9945FF;
+  --accent-color-primary-darker: #8530ea;
+  --accent-color-primary-bg-transparent: rgba(153, 69, 255, 0.08);
+
+  --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --card-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+
+  --hero-bg-gradient: linear-gradient(to right, #9945FF, #14F195);
+  --hero-text-color: #ffffff;
+}
+
+[data-bs-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #f8f9fa;
+  --text-muted-color: #adb5bd;
+  --text-subtle-color: #888; 
+  --secondary-bg-color: #2c2c2c;
+  --item-bg-color: #252525; 
+  --card-bg: #212121; 
+  --code-bg: #343a40;
+  --border-color: #495057;
+  --border-color-transparent: rgba(255, 255, 255, 0.1); 
+  --link-color: #6ea8fe;
+
+  --accent-color-primary: #a972ff; 
+  --accent-color-primary-darker: #9945FF; 
+  --accent-color-primary-bg-transparent: rgba(169, 114, 255, 0.15);
+
+  --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  --card-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
+
+  --hero-bg-gradient: linear-gradient(to right, #000000, #1a1a2e); 
+  --hero-text-color: #ffffff;
+}
+
+/* Tamaños de fuente para preferencias de usuario */
+.font-size-small {
+  font-size: 0.875rem;
+}
+
+.font-size-small h1 {
+  font-size: 1.75rem;
+}
+
+.font-size-small h2 {
+  font-size: 1.5rem;
+}
+
+.font-size-small h3 {
+  font-size: 1.25rem;
+}
+
+.font-size-small h4, .font-size-small h5, .font-size-small h6 {
+  font-size: 1rem;
+}
+
+.font-size-small .nav-link, .font-size-small .dropdown-item {
+  font-size: 0.875rem;
+}
+
+.font-size-small .btn {
+  font-size: 0.875rem;
+}
+
+.font-size-medium {
+  font-size: 1rem;
+}
+
+.font-size-medium h1 {
+  font-size: 2rem;
+}
+
+.font-size-medium h2 {
+  font-size: 1.75rem;
+}
+
+.font-size-medium h3 {
+  font-size: 1.5rem;
+}
+
+.font-size-medium h4 {
+  font-size: 1.25rem;
+}
+
+.font-size-medium h5, .font-size-medium h6 {
+  font-size: 1.1rem;
+}
+
+.font-size-large {
+  font-size: 1.125rem;
+}
+
+.font-size-large h1 {
+  font-size: 2.25rem;
+}
+
+.font-size-large h2 {
+  font-size: 2rem;
+}
+
+.font-size-large h3 {
+  font-size: 1.75rem;
+}
+
+.font-size-large h4 {
+  font-size: 1.5rem;
+}
+
+.font-size-large h5 {
+  font-size: 1.25rem;
+}
+
+.font-size-large h6 {
+  font-size: 1.125rem;
+}
+
+.font-size-large .nav-link, .font-size-large .dropdown-item {
+  font-size: 1.125rem;
+}
+
+.font-size-large .btn {
+  font-size: 1.125rem;
+}
+
+/* Variables CSS para tamaños de fuente */
+:root {
+  --base-font-size: 1rem;
+}
+
+/* Menú de temas y accesibilidad */
+.theme-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  min-width: 280px;
+  max-width: 320px;
+  z-index: 1000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  backdrop-filter: blur(10px);
+}
+
+[data-bs-theme="dark"] .theme-dropdown-menu {
+  background-color: rgba(33, 37, 41, 0.95);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-bs-theme="light"] .theme-dropdown-menu {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.theme-options {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Estilos para modo de alto contraste */
+.high-contrast {
+  --text-contrast-ratio: 10;
+}
+
+/* Modo alto contraste claro */
+[data-bs-theme="light"].high-contrast {
+  --bs-body-bg: #ffffff;
+  --bs-body-color: #000000;
+  --bs-link-color: #0000ee;
+  --bs-link-hover-color: #551a8b;
+  --bs-border-color: #000000;
+  --bs-navbar-color: #000000;
+  --bs-card-bg: #ffffff;
+  --bs-card-color: #000000;
+  --bs-list-group-bg: #ffffff;
+  --bs-list-group-color: #000000;
+}
+
+/* Modo alto contraste oscuro */
+[data-bs-theme="dark"].high-contrast {
+  --bs-body-bg: #000000;
+  --bs-body-color: #ffffff;
+  --bs-link-color: #00ccff;
+  --bs-link-hover-color: #ffcc00;
+  --bs-border-color: #ffffff;
+  --bs-navbar-color: #ffffff;
+  --bs-card-bg: #000000;
+  --bs-card-color: #ffffff;
+  --bs-list-group-bg: #000000;
+  --bs-list-group-color: #ffffff;
+}
+
+.high-contrast .btn-outline-light,
+.high-contrast .btn-outline-dark {
+  border-width: 2px;
+}
+
+.high-contrast .navbar-brand,
+.high-contrast .nav-link,
+.high-contrast h1, 
+.high-contrast h2, 
+.high-contrast h3 {
+  text-shadow: none;
+}
+
+.high-contrast .form-control:focus,
+.high-contrast .btn:focus,
+.high-contrast a:focus {
+  outline: 3px solid #ffcc00;
+  outline-offset: 2px;
+}
+
+/* Desactivar animaciones para accesibilidad */
+.disable-animations *,
+.disable-animations *::before,
+.disable-animations *::after {
+  animation-duration: 0.001ms !important;
+  animation-delay: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  transition-delay: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+.disable-animations .animate-on-load,
+.disable-animations .feature-card:hover,
+.disable-animations .card:hover,
+.disable-animations .btn:hover {
+  transform: none !important;
+}
+
+/* Tamaño de fuente global */
+html, body {
+  font-size: var(--base-font-size);
+}
+
+/* Cuando el usuario utiliza navegación con teclado, mejoramos la accesibilidad */
+:focus {
+  outline: 3px solid #4d90fe;
+  outline-offset: 2px;
+}
+
+.high-contrast :focus {
+  outline: 3px solid #ffcc00;
+}
+
+/* Skip to main content - Accesibilidad para usuarios de lectores de pantalla */
+.skip-to-content {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+  background-color: var(--bs-primary);
+  color: white;
+  z-index: 9999;
+  transition: top 0.3s;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Mejorar la visibilidad de los elementos enfocados en alto contraste */
+.high-contrast button:focus,
+.high-contrast a:focus,
+.high-contrast input:focus,
+.high-contrast select:focus,
+.high-contrast textarea:focus {
+  outline: 3px solid #ffcc00;
+  outline-offset: 2px;
+}
+
+/* --- MEJORA DE FILTROS Y DROPDOWNS EN LA BARRA DE CURSOS --- */
+.custom-filter-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2.5rem !important;
+  padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+  background: #f9f9fb;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(80, 60, 180, 0.08);
+  border: 1px solid #ececf6;
+}
+
+.custom-filter-bar > .col-md-4,
+.custom-filter-bar > .col {
+  flex: 1 1 0;
+  max-width: 33.3333%;
+  min-width: 0;
+}
+
+/* Estilos uniformes para inputs y dropdowns */
+.custom-filter-bar .filter-input,
+.custom-filter-bar .dropdown-toggle.filter-input,
+.custom-filter-bar .form-control {
+  width: 100% !important;
+  height: 46px !important; /* Altura fija para todos */
+  min-width: 0;
+  margin: 0 auto;
+  border-radius: 12px !important;
+  font-size: 0.95rem;
+  padding: 0 16px;
+  border: 1.5px solid #e0e0e0;
+  background: #fff;
+  color: #333; /* Color de texto por defecto */
+  box-shadow: 0 1px 4px rgba(80,60,180,0.03);
+  transition: all 0.2s ease;
+}
+
+/* Forzar altura para mantener consistencia visual */
+.custom-filter-bar .form-control,
+.custom-filter-bar .dropdown-toggle {
+  height: 46px !important;
+  display: flex;
+  align-items: center;
+}
+
+/* Estilos para hover y focus */
+.custom-filter-bar .filter-input:hover,
+.custom-filter-bar .dropdown-toggle.filter-input:hover,
+.custom-filter-bar .form-control:hover {
+  border-color: #c0c0c0;
+  background-color: #fcfcff;
+}
+
+.custom-filter-bar .filter-input:focus,
+.custom-filter-bar .dropdown-toggle.filter-input:focus,
+.custom-filter-bar .form-control:focus {
+  border-color: var(--accent-color-primary);
+  box-shadow: 0 0 0 2px rgba(153,69,255,0.10);
+  background-color: #fff;
+}
+
+/* Asegurar que el texto siempre sea visible */
+.custom-filter-bar .dropdown-toggle.filter-input,
+.custom-filter-bar .dropdown-toggle.filter-input:active,
+.custom-filter-bar .dropdown-toggle.filter-input:focus,
+.custom-filter-bar .dropdown-item,
+.custom-filter-bar .dropdown-item:active,
+.custom-filter-bar .dropdown-item.active {
+  color: #333 !important; /* Forzar color de texto, nunca blanco */
+}
+
+/* Focus y active para evitar que se ponga en blanco */
+.custom-filter-bar .dropdown-toggle.filter-input:focus,
+.custom-filter-bar .dropdown-toggle.filter-input:active {
+  background-color: #fff !important;
+  color: #333 !important;
+}
+
+/* Elementos dropdown */
+.custom-filter-bar .dropdown-menu {
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(80,60,180,0.10);
+  padding: 10px 0;
+  min-width: 220px;
+  border: 1px solid #eee;
+}
+
+.custom-filter-bar .dropdown-item {
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  transition: background 0.18s;
+  color: #333;
+}
+
+/* Highlight para items seleccionados o activos */
+.custom-filter-bar .dropdown-item.active,
+.custom-filter-bar .dropdown-item:active {
+  background-color: var(--accent-color-primary-bg-transparent, rgba(153,69,255,0.08)) !important;
+  color: var(--accent-color-primary, #7c3aed) !important;
+}
+
+.custom-filter-bar .dropdown-item:hover {
+  background-color: #f5f5f9;
+}
+
+.custom-filter-bar .badge {
+  font-size: 0.85em;
+  padding: 0.3em 0.6em;
+  border-radius: 6px;
+}
+
+.custom-filter-bar .clear-tags-btn {
+  color: #e74c3c !important;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.5em;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+@media (max-width: 991px) {
+  .custom-filter-bar {
+    flex-direction: column !important;
+    gap: 1.2rem;
+    padding: 1.2rem 0.8rem;
+  }
+  .custom-filter-bar > .col-md-4,
+  .custom-filter-bar > .col {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+  .custom-filter-bar .filter-input,
+  .custom-filter-bar .dropdown-toggle.filter-input,
+  .custom-filter-bar .form-control {
+    min-width: 100%;
+    max-width: 100%;
+    font-size: 0.95rem;
+    height: 42px !important; /* Ligeramente más pequeño en móvil */
+  }
+  .custom-filter-bar .dropdown-menu {
+    min-width: 100%;
+  }
+}
+/* --- FIN MEJORA DE FILTROS --- */
+
+/* --- AJUSTES PARA SELECTOR DE ORDENACIÓN --- */
+.custom-filter-bar .form-select {
+  width: 100%;
+  min-width: auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 30px; /* Espacio para el caret/icono */
+}
+
+.custom-filter-bar .dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Asegurar que el texto de las opciones sea visible */
+.custom-filter-bar .form-select option {
+  white-space: normal; /* Permite que el texto se envuelva si es necesario */
+}
+/* --- FIN AJUSTES SELECTOR ORDENACIÓN --- */
+
+/* Añadir un estilo para voltear horizontalmente un icono */
+.flip-horizontal {
+  transform: scaleX(-1);
+}
+
+/* --- AJUSTES REFINADOS PARA SELECTOR DE ORDENACIÓN --- */
+.custom-filter-bar .form-select {
+  width: 100%;
+  min-width: auto;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 30px; /* Espacio para el caret/icono */
+  font-size: 0.95rem; /* Letra ligeramente más pequeña */
+}
+
+/* Estilos para las opciones del select para asegurar que no se corten */
+.custom-filter-bar select option {
+  padding: 8px;
+  font-size: 0.95rem;
+}
+
+/* --- FIN AJUSTES REFINADOS --- */
+
+/* --- ESTILOS PARA MODAL DE REVISIÓN DE LECCIONES --- */
+.lesson-review-modal .modal-dialog {
+  max-width: 90%;
+  margin: 1.75rem auto;
+}
+
+.lesson-review-modal .modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.lesson-review-modal .modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eaeaea;
+  border-radius: 12px 12px 0 0;
+  padding: 1.25rem 1.5rem;
+}
+
+.lesson-review-modal .modal-body {
+  padding: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.lesson-review-modal .modal-footer {
+  border-top: 1px solid #eaeaea;
+  border-radius: 0 0 12px 12px;
+  padding: 1.25rem 1.5rem;
+}
+
+.lesson-review-modal textarea {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.95rem;
+}
+
+.lesson-review-modal .nav-tabs .nav-link {
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.lesson-review-modal .nav-tabs .nav-link.active {
+  background-color: #f8f9fa;
+  border-bottom-color: #f8f9fa;
+  font-weight: 600;
+}
+
+/* Botón para publicar cursos ocultos (más visible para moderadores) */
+.btn-attention {
+  animation: pulse-attention 2s infinite;
+  border-width: 2px !important;
+  box-shadow: 0 0 10px rgba(var(--bs-success-rgb), 0.5);
+}
+
+@keyframes pulse-attention {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* --- Utilidades para tarjetas de curso homogéneas --- */
+.course-title-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.8em;
+  max-height: 2.8em;
+  line-height: 1.4em;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.min-vh-25 {
+  min-height: 25vh;
+}
+
+/* Estilos para HomePage - hover effects */
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+.min-vh-50 {
+  min-height: 50vh;
+}
+
+/* --- Fin utilidades tarjetas --- */

@@ -1,0 +1,15 @@
+services:
+  # Solo la aplicación Solana Learning (Backend + Frontend)
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb+srv://vicridev:OvDwlhYiLfdOdhSS@db.e0byx.mongodb.net/?retryWrites=true&w=majority
+      - FRONTEND_URL=http://localhost:5000
+    restart: unless-stopped
+
+volumes:
+  app_data: 

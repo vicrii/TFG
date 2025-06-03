@@ -1,0 +1,81 @@
+services:
+  # Aplicación Solana Learning (Backend + Frontend)
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb+srv://vicridev:OvDwlhYiLfdOdhSS@db.e0byx.mongodb.net/?retryWrites=true&w=majority
+      - FRONTEND_URL=https://localhost
+      - VITE_API_URL=https://localhost
+    restart: unless-stopped
+    networks:
+      - solana-network
+
+  # Generador de certificados SSL (MEJORADO)
+  ssl-generator:
+    image: alpine:latest
+    volumes:
+      - ssl_certs:/etc/ssl/certs
+      - ssl_private:/etc/ssl/private
+    command: >
+      sh -c "
+        apk add --no-cache openssl &&
+        mkdir -p /etc/ssl/private /etc/ssl/certs &&
+        echo 'Generating SSL certificates for localhost...' &&
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+          -keyout /etc/ssl/private/nginx-selfsigned.key \
+          -out /etc/ssl/certs/nginx-selfsigned.crt \
+          -subj '/C=ES/ST=Madrid/L=Madrid/O=SolanaLearning/OU=Dev/CN=localhost' &&
+        chmod 644 /etc/ssl/certs/nginx-selfsigned.crt &&
+        chmod 600 /etc/ssl/private/nginx-selfsigned.key &&
+        echo 'SSL certificates generated successfully!' &&
+        ls -la /etc/ssl/certs/ &&
+        ls -la /etc/ssl/private/ &&
+        echo 'Keeping container alive...' &&
+        while true; do sleep 3600; done"
+    healthcheck:
+      test: ["CMD", "test", "-f", "/etc/ssl/certs/nginx-selfsigned.crt"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - solana-network
+
+  # Nginx con SSL (CONFIGURACIÓN CORREGIDA)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.local.conf:/etc/nginx/nginx.conf:ro
+      - ssl_certs:/etc/ssl/certs:ro
+      - ssl_private:/etc/ssl/private:ro
+    depends_on:
+      ssl-generator:
+        condition: service_healthy
+      app:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - solana-network
+
+volumes:
+  ssl_certs:
+    driver: local
+  ssl_private:
+    driver: local
+
+networks:
+  solana-network:
+    driver: bridge 
