@@ -122,12 +122,8 @@ const CourseDetail: React.FC = () => {
           apiClient.setAuthHeader(user.walletAddress);
           promises.push(lessonService.getCourseLessons(courseId, user.walletAddress));
         } else {
-          // Usuario no autenticado - cargar vista previa
-          promises.push(fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/public/courses/${courseId}/lesson-previews`)
-            .then(response => {
-              if (!response.ok) throw new Error('Error al cargar vistas previas');
-              return response.json();
-            }));
+          // Usuario no autenticado - cargar vista previa usando apiClient
+          promises.push(apiClient.get<any[]>(`/public/courses/${courseId}/lesson-previews`));
         }
         
         // Ejecutar ambas cargas en paralelo

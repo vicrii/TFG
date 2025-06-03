@@ -44,7 +44,16 @@ interface UIProviderProps {
   children: ReactNode;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Use dynamic API URL function similar to apiClient
+const getApiUrl = () => {
+  // En desarrollo, usar la variable de entorno o localhost
+  if (import.meta.env.DEV) {
+    return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  }
+  
+  // En producción (Railway), usar ruta relativa ya que frontend y backend están en el mismo dominio
+  return '/api';
+};
 
 const getFontSizeValue = (size: FontSize): string => {
   switch (size) {
@@ -162,7 +171,7 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
       if (!user?.walletAddress) return;
       
       try {
-        const response = await axios.get(`${API_URL}/users/settings`, {
+        const response = await axios.get(`${getApiUrl()}/users/settings`, {
           headers: {
             'x-wallet-address': user.walletAddress
           }

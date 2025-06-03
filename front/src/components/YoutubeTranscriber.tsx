@@ -6,11 +6,19 @@ import { Form, Button, Modal, ProgressBar, Tab, Tabs, Badge, Alert } from 'react
 import '../styles/YoutubeTranscriber.css';
 import { FaFileAlt, FaSpinner, FaCheckCircle, FaTimesCircle, FaEdit, FaGraduationCap, FaTrash, FaPlus, FaQuestionCircle, FaCog, FaCode } from 'react-icons/fa';
 import { courseService } from '../services/course/courseService';
+import { apiClient } from '../services/api/api.client';
 import { TranscriptionResult, Lesson, CourseFormData, EnhancedLesson } from '../types/youtubeTranscriber.types';
 
-// Configuración base de axios
+// Configuración base de axios usando la misma lógica que apiClient
+const getApiUrl = () => {
+  if (import.meta.env.DEV) {
+    return import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  }
+  return '';
+};
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: getApiUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -297,31 +305,22 @@ const TextTranscriber: React.FC = () => {
                 }))
               : [];
             
-            const response = await fetch(`http://localhost:5000/api/lessons/by-course/${newCourse._id}`, {
-              method: 'POST',
+            const response = await apiClient.post(`/lessons/by-course/${newCourse._id}`, {
+              title: lesson.title,
+              description: lesson.title,
+              content: lesson.content,
+              quizQuestions: quizQuestions,
+              codeExercises: codeExercises,
+              requiredToProgress: quizQuestions.length > 0,
+              minQuizScore: 70,
+              order: i
+            }, {
               headers: {
-                'Content-Type': 'application/json',
                 'x-wallet-address': user.walletAddress,
-              },
-              body: JSON.stringify({
-                title: lesson.title,
-                description: lesson.title,
-                content: lesson.content,
-                quizQuestions: quizQuestions,
-                codeExercises: codeExercises,
-                requiredToProgress: quizQuestions.length > 0,
-                minQuizScore: 70,
-                order: i
-              }),
+              }
             });
             
-            if (!response.ok) {
-              const errorText = await response.text();
-              console.error(`Error al crear la lección ${i+1}:`, errorText);
-            } else {
-              const createdLesson = await response.json();
-              console.log(`Lección ${i+1} creada con éxito:`, createdLesson._id);
-            }
+            console.log(`Lección ${i+1} creada con éxito:`, response._id);
           } catch (lessonError) {
             console.error(`Error al crear la lección ${i+1}:`, lessonError);
           }

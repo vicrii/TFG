@@ -347,35 +347,23 @@ export const LessonList: React.FC<LessonListProps> = ({
         }, 500);
         
         // Llamada a la API para procesar el contenido
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/generate-lesson-content`, {
-          method: 'POST',
+        const responseData = await apiClient.post<{
+          lessons?: Partial<Lesson>[];
+          content?: string;
+          quizQuestions?: any[];
+          codeExercises?: any[];
+        }>('/generate-lesson-content', requestData, {
           headers: {
-            'Content-Type': 'application/json',
             'x-wallet-address': walletAddress, // Añadimos el encabezado de autenticación
-          },
-          body: JSON.stringify(requestData)
+          }
         });
         
         // Detener el intervalo de progreso simulado
         clearInterval(progressInterval);
         setGenerationProgress(100); // Marcar como completado
         
-        // Obtener la respuesta completa
-        const responseText = await response.text();
-        
-        // Verificar si la respuesta fue exitosa
-        if (!response.ok) {
-          throw new Error(`Error del servidor: ${responseText}`);
-        }
-        
-        // Intentar parsear como JSON
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (e) {
-          console.error("Error al parsear la respuesta JSON:", e);
-          throw new Error(`Error en la respuesta del servidor: ${responseText}`);
-        }
+        // apiClient ya devuelve los datos parseados, no necesitamos parsear JSON
+        const data = responseData;
         
         if (requestData.generateMultipleLessons) {
           // Si se generaron múltiples lecciones, preparar para revisión

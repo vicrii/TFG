@@ -105,7 +105,8 @@ console.log = function(...args) {
     // Filtrar mensajes específicos
     if (message.includes('Checking wallet') || 
         message.includes('Wallet address set') ||
-        message.includes('GET http://localhost:5000/api/')) {
+        message.includes('GET http://localhost:5000/api/') ||
+        message.includes('GET /api/')) {
       return;
     }
     
