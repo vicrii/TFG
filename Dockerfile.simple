@@ -3,15 +3,26 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy backend
+# Build the frontend first
+COPY front/package*.json ./front/
+WORKDIR /app/front
+RUN npm install --legacy-peer-deps
+COPY front/ ./
+RUN npm run build
+
+# Build the backend
+WORKDIR /app/back
 COPY back/package*.json ./
 RUN npm install
-
 COPY back/ ./
 RUN npm run build
 
-# Copy pre-built frontend (we'll build it locally)
-COPY front/dist ./public
+# Setup the final app structure
+WORKDIR /app
+RUN cp -r /app/front/dist ./public
+RUN cp -r /app/back/dist ./dist
+RUN cp -r /app/back/node_modules ./node_modules
+RUN cp /app/back/package*.json ./
 
 # Clean dev dependencies after build
 RUN npm prune --production
