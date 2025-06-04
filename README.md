@@ -173,15 +173,20 @@ graph TB
 erDiagram
     USERS ||--o{ ENROLLMENTS : "se inscribe"
     USERS ||--o{ COURSES : "crea"
+    USERS ||--o{ LESSON_PROGRESS : "progresa"
+    USERS ||--o{ USER_ACTIVITY : "registra"
     COURSES ||--o{ LESSONS : "contiene"
     COURSES ||--o{ ENROLLMENTS : "tiene"
-    LESSONS ||--o{ USER_PROGRESS : "registra"
+    LESSONS ||--o{ LESSON_PROGRESS : "registra"
+    LESSONS ||--o{ QUESTIONS : "contiene"
+    LESSONS ||--o{ USER_ACTIVITY : "genera"
 
     USERS {
         ObjectId _id PK
         String email UK
         String displayName
         String role
+        String walletAddress
         Date createdAt
     }
 
@@ -189,8 +194,15 @@ erDiagram
         ObjectId _id PK
         String title
         String description
-        ObjectId instructor FK
+        String content
+        String imageUrl
+        String instructor
+        Number price
+        String level
+        Array tags
         Boolean published
+        Number totalDuration
+        Number totalLessons
         Date createdAt
     }
 
@@ -200,15 +212,54 @@ erDiagram
         String content
         ObjectId course FK
         Number order
+        String videoUrl
         Array quizQuestions
+        Array codeExercises
     }
 
     ENROLLMENTS {
         ObjectId _id PK
         ObjectId user FK
         ObjectId course FK
-        Number progress
+        Date enrolledAt
+        String status
+    }
+
+    LESSON_PROGRESS {
+        ObjectId _id PK
+        ObjectId user FK
+        ObjectId lesson FK
+        ObjectId course FK
         Boolean completed
+        Date completedAt
+        Number timeSpent
+        Boolean quizCompleted
+        Number quizScore
+        Boolean codeExercisesCompleted
+        Array completedCodeExercises
+    }
+
+    USER_ACTIVITY {
+        ObjectId _id PK
+        ObjectId user FK
+        ObjectId course FK
+        ObjectId lesson FK
+        String activityType
+        Number durationSeconds
+        Object metadata
+        Date createdAt
+    }
+
+    QUESTIONS {
+        ObjectId _id PK
+        String type
+        String text
+        ObjectId lessonId FK
+        Array options
+        String codeTemplate
+        String correctAnswer
+        String explanation
+        Number points
     }
 ```
 
@@ -221,13 +272,16 @@ erDiagram
   email: String, // único
   displayName: String,
   role: String, // 'admin', 'instructor', 'student'
-  walletAddress: String,
+  walletAddress: String, // único, opcional
+  avatar: String,
+  preferences: Object,
   createdAt: Date,
+  updatedAt: Date,
   
   // Índices
   indexes: [
     { email: 1 }, // único
-    { walletAddress: 1 },
+    { walletAddress: 1 }, // único, sparse
     { role: 1 }
   ]
 }
@@ -239,14 +293,24 @@ erDiagram
   _id: ObjectId,
   title: String,
   description: String,
-  instructor: ObjectId, // ref: 'users'
+  content: String, // HTML contenido del curso
+  imageUrl: String,
+  instructor: String, // walletAddress del instructor
+  price: Number,
+  level: String, // 'beginner', 'intermediate', 'advanced'
+  tags: [String],
   published: Boolean,
+  totalDuration: Number, // duración en minutos
+  totalLessons: Number,
   createdAt: Date,
+  updatedAt: Date,
   
   // Índices
   indexes: [
     { instructor: 1 },
     { published: 1 },
+    { level: 1 },
+    { tags: 1 },
     { createdAt: -1 }
   ]
 }
@@ -257,11 +321,14 @@ erDiagram
 {
   _id: ObjectId,
   title: String,
-  content: String, // HTML
+  content: String, // HTML contenido de la lección
   course: ObjectId, // ref: 'courses'
   order: Number,
   videoUrl: String,
-  quizQuestions: [Object],
+  quizQuestions: [Object], // preguntas del quiz
+  codeExercises: [Object], // ejercicios de código
+  createdAt: Date,
+  updatedAt: Date,
   
   // Índices
   indexes: [
@@ -271,38 +338,121 @@ erDiagram
 }
 ```
 
----
+#### **4. Colección: `enrollments`**
+```javascript
+{
+  _id: ObjectId,
+  user: ObjectId, // ref: 'users'
+  course: ObjectId, // ref: 'courses'
+  enrolledAt: Date,
+  status: String, // 'active', 'completed', 'dropped'
+  createdAt: Date,
+  updatedAt: Date,
+  
+  // Índices
+  indexes: [
+    { user: 1, course: 1 }, // único compuesto
+    { user: 1 },
+    { course: 1 },
+    { status: 1 }
+  ]
+}
+```
 
-## 💻 Descripción de la Plataforma
+#### **5. Colección: `lessonprogress`**
+```javascript
+{
+  _id: ObjectId,
+  user: ObjectId, // ref: 'users'
+  lesson: ObjectId, // ref: 'lessons'
+  course: ObjectId, // ref: 'courses'
+  completed: Boolean,
+  completedAt: Date,
+  timeSpent: Number, // tiempo en segundos
+  notes: String,
+  // Quiz específico
+  quizCompleted: Boolean,
+  quizCompletedAt: Date,
+  quizScore: Number, // 0-100
+  // Ejercicios de código específicos
+  codeExercisesCompleted: Boolean,
+  codeExercisesCompletedAt: Date,
+  completedCodeExercises: [String], // IDs de ejercicios completados
+  completedExercises: [{
+    exerciseId: String,
+    lessonId: String,
+    completedAt: Date
+  }],
+  createdAt: Date,
+  updatedAt: Date,
+  
+  // Índices
+  indexes: [
+    { user: 1, lesson: 1 }, // único compuesto
+    { user: 1, course: 1 },
+    { course: 1 },
+    { completed: 1 }
+  ]
+}
+```
 
-### **🎨 Diseño de Interfaces**
+#### **6. Colección: `useractivity`**
+```javascript
+{
+  _id: ObjectId,
+  user: ObjectId, // ref: 'users'
+  course: ObjectId, // ref: 'courses'
+  lesson: ObjectId, // ref: 'lessons'
+  activityType: String, // 'lesson_viewed', 'lesson_completed', 'code_executed', 'simulator_used'
+  durationSeconds: Number,
+  metadata: Object, // datos adicionales específicos de la actividad
+  createdAt: Date,
+  
+  // Índices
+  indexes: [
+    { user: 1, course: 1 },
+    { user: 1, lesson: 1 },
+    { user: 1, activityType: 1 },
+    { course: 1, activityType: 1 },
+    { createdAt: 1 }
+  ]
+}
+```
 
-#### **✅ HTML5 y CSS3**
-- **HTML5 semántico**: `<header>`, `<nav>`, `<main>`, `<section>`
-- **CSS3**: Flexbox, Grid, Animations, Custom Properties
-- **Progressive Enhancement**: Funcionalidad básica sin JavaScript
+#### **7. Colección: `questions`**
+```javascript
+{
+  _id: ObjectId,
+  type: String, // 'multiple_choice', 'text', 'code'
+  text: String, // texto de la pregunta
+  lessonId: ObjectId, // ref: 'lessons'
+  options: [{ // para preguntas multiple choice
+    text: String,
+    isCorrect: Boolean
+  }],
+  codeTemplate: String, // plantilla para preguntas de código
+  correctAnswer: String,
+  explanation: String,
+  points: Number,
+  createdAt: Date,
+  updatedAt: Date,
+  
+  // Índices
+  indexes: [
+    { lessonId: 1 },
+    { type: 1 }
+  ]
+}
+```
 
-#### **✅ Multimedia**
-- **Videos integrados**: Reproductor personalizado con controles
-- **Imágenes optimizadas**: WebP, lazy loading, responsive images
-- **SVG**: Iconos escalables y animaciones
+### **Relaciones y Constraints**
 
-#### **✅ React Framework**
-**Justificación de Elección:**
-- **Componentización**: Reutilización y mantenibilidad
-- **Virtual DOM**: Rendimiento optimizado
-- **Ecosistema**: Abundantes librerías y herramientas
-- **TypeScript**: Tipado estático para mejor desarrollo
-- **Hooks**: Gestión moderna de estado
-
-
-
-
-
-### **🔒 Servidor y Administración**
-
-#### **✅ Servidor Online**
-- **Railway**: Hosting en la nube
+- **users.email**: Único, índice principal para autenticación
+- **users.walletAddress**: Único sparse, permite autenticación Web3
+- **enrollments**: Constraint único compuesto (user + course) - un usuario no puede inscribirse dos veces al mismo curso
+- **lessonprogress**: Constraint único compuesto (user + lesson) - un usuario tiene un solo progreso por lección
+- **courses.instructor**: Referencia al walletAddress en lugar de ObjectId para flexibilidad
+- **Cascade deletes**: Se implementan a nivel de aplicación para mantener integridad referencial
 
 ---
 
