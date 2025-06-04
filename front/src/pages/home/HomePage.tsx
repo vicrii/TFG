@@ -25,10 +25,19 @@ function HomePage() {
     lessons: 0,
     loadingStats: true
   });
-  const { user } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
 
   // OPTIMIZED: Prevent multiple loads and add proper cleanup
   useEffect(() => {
+    console.log('HomePage effect triggered:', { user, authLoading, isTabReturning });
+    
+    // No necesitamos esperar la autenticación en HomePage ya que es una página pública
+    // pero sí queremos evitar ejecutar múltiples veces durante el tab switching
+    if (isTabReturning) {
+      console.log('Tab returning, waiting...');
+      return;
+    }
+    
     let isComponentMounted = true;
 
     const fetchData = async () => {
@@ -104,7 +113,7 @@ function HomePage() {
     return () => {
       isComponentMounted = false;
     };
-  }, [user?.walletAddress]); 
+  }, [user?.walletAddress, isTabReturning]); // Added isTabReturning dependency
 
   // Función para mostrar el nivel del curso con mejor contraste
   const renderLevel = (level: string) => {

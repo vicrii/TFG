@@ -1,11 +1,7 @@
-import { Router } from 'express';
+import express from 'express';
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
-import dotenv from 'dotenv';
 
-// Cargar variables de entorno
-dotenv.config();
-
-const router = Router();
+const router = express.Router();
 
 // Asegurarse de que la API key esté configurada
 const apiKey = process.env.GEMINI_API_KEY;

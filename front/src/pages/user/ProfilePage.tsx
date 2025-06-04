@@ -5,7 +5,7 @@ import { userService } from '../../services/user/userService';
 import { FaUser, FaWallet, FaCalendarAlt, FaStar } from 'react-icons/fa';
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
   
   const [profile, setProfile] = useState<any>({
     name: '',
@@ -76,6 +76,24 @@ const ProfilePage: React.FC = () => {
       default: return 'Estudiante';
     }
   };
+
+  // Si la autenticación está cargando o la tab está regresando, mostrar loading
+  if (authLoading || isTabReturning) {
+    return (
+      <Container className="py-5">
+        <Row className="justify-content-center">
+          <Col lg={6}>
+            <Card className="shadow-lg border-0">
+              <Card.Body className="text-center py-5">
+                <Spinner animation="border" variant="primary" />
+                <h5 className="mt-3 text-muted">Cargando perfil...</h5>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
 
   if (!user) {
     return (
@@ -194,7 +212,7 @@ const ProfilePage: React.FC = () => {
               {/* Mensaje informativo */}
               <div className="text-center mt-4">
                 <small className="text-muted">
-                  Para editar tu perfil, contacta con el soporte técnico
+                  Tu perfil se sincroniza automáticamente con tu wallet
                 </small>
               </div>
             </div>

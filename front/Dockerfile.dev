@@ -9,28 +9,20 @@ LABEL description="Frontend React para plataforma de aprendizaje blockchain"
 # Instalar dependencias del sistema necesarias para Vite
 RUN apk add --no-cache curl
 
-# Crear usuario no-root para seguridad
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S frontend -u 1001
-
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Cambiar propietario del directorio
-RUN chown -R frontend:nodejs /app
-USER frontend
-
 # Copiar package.json y package-lock.json
-COPY --chown=frontend:nodejs package*.json ./
+COPY package*.json ./
 
 # Instalar dependencias (con legacy peer deps por si acaso)
 RUN npm install --legacy-peer-deps
 
 # Copiar código fuente
-COPY --chown=frontend:nodejs . .
+COPY . .
 
 # Exponer puerto de Vite
-EXPOSE 3000
+EXPOSE 5173
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \

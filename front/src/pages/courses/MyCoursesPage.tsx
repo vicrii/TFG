@@ -32,7 +32,7 @@ const mockEnrollments: IEnrollment[] = [
 ];
 
 const MyCoursesPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
   const navigate = useNavigate();
   const [enrollments, setEnrollments] = useState<IEnrollment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -135,6 +135,14 @@ const MyCoursesPage: React.FC = () => {
 
   // OPTIMIZED: Add cleanup and prevent multiple loads
   useEffect(() => {
+    console.log('MyCoursesPage effect triggered:', { user, authLoading, isTabReturning });
+    
+    // Si la autenticación aún está cargando o la tab está regresando, no hacer nada
+    if (authLoading || isTabReturning) {
+      console.log('Auth still loading or tab returning, waiting...');
+      return;
+    }
+    
     let isComponentMounted = true;
 
     const loadEnrollments = async () => {
@@ -154,7 +162,7 @@ const MyCoursesPage: React.FC = () => {
     return () => {
       isComponentMounted = false;
     };
-  }, [user?.walletAddress]); // SIMPLIFIED: Only depend on wallet address
+  }, [user?.walletAddress, authLoading, isTabReturning]); // Added authLoading and isTabReturning dependencies
 
   // OPTIMIZED: Memoize course separation to prevent unnecessary recalculations
   useEffect(() => {
@@ -213,6 +221,28 @@ const MyCoursesPage: React.FC = () => {
     fetchEnrollments(true);
   };
 
+  // Mostrar spinner mientras la autenticación está cargando o tab regresando
+  if (authLoading || isTabReturning) {
+    return (
+      <div className="text-center py-5">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-3">Verificando autenticación...</p>
+      </div>
+    );
+  }
+  
+  // Solo después de que la autenticación esté resuelta, verificar si hay usuario
+  if (!user) {
+    return (
+      <Container className="py-5">
+        <Alert variant="warning">
+          <h4>Autenticación requerida</h4>
+          <p>Por favor conecta tu wallet para ver tus cursos.</p>
+        </Alert>
+      </Container>
+    );
+  }
+
   // OPTIMIZATION: Early return for loading state to prevent rendering large component
   if (loading) {
     return (
@@ -240,23 +270,6 @@ const MyCoursesPage: React.FC = () => {
               Cargar versión simplificada
             </Button>
           </div>
-        </Alert>
-      </Container>
-    );
-  }
-
-  if (!user) {
-    return (
-      <Container className="py-5">
-        <Alert variant="info">
-          <p>Por favor, inicia sesión para ver tus cursos inscritos.</p>
-          <Button 
-            variant="primary" 
-            className="mt-2"
-            onClick={() => navigate('/')}
-          >
-            Ir al inicio
-          </Button>
         </Alert>
       </Container>
     );
@@ -354,7 +367,7 @@ const MyCoursesPage: React.FC = () => {
                 {coursesInProgress.map((enrollment) => (
                   <Col key={enrollment._id} md={6} lg={4}>
                     <EnrolledCourseCard 
-                      course={enrollment.course}
+                      course={enrollment.course as any}
                       progress={enrollment.progress || 0}
                       enrolledAt={enrollment.enrolledAt}
                       isEnrolled={true}
@@ -404,7 +417,7 @@ const MyCoursesPage: React.FC = () => {
                 {completedCourses.map((enrollment) => (
                   <Col key={enrollment._id} md={6} lg={4}>
                     <EnrolledCourseCard 
-                      course={enrollment.course}
+                      course={enrollment.course as any}
                       progress={100}
                       enrolledAt={enrollment.enrolledAt}
                       isEnrolled={true}

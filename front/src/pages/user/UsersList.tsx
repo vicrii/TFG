@@ -15,7 +15,7 @@ type EditableUserData = {
 };
 
 const UsersList: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
   const navigate = useNavigate();
   
   const [users, setUsers] = useState<any[]>([]);
@@ -47,10 +47,18 @@ const UsersList: React.FC = () => {
   const [errorModalMessage, setErrorModalMessage] = useState<string>('');
   
   useEffect(() => {
+    console.log('UsersList effect triggered:', { user, authLoading, isTabReturning });
+    
+    // Si la autenticación aún está cargando o la tab está regresando, no hacer nada
+    if (authLoading || isTabReturning) {
+      console.log('Auth still loading or tab returning, waiting...');
+      return;
+    }
+    
     if (user?.walletAddress && user?.role === 'moderator') {
       fetchUsers();
     }
-  }, [user?.walletAddress]);
+  }, [user?.walletAddress, user?.role, authLoading, isTabReturning]);
   
   const fetchUsers = async () => {
     if (!user?.walletAddress || user?.role !== 'moderator') return;
@@ -201,12 +209,39 @@ const UsersList: React.FC = () => {
     return matchesSearch && matchesRole;
   });
   
-  if (!user || user.role !== 'moderator') {
+  // Mostrar spinner mientras la autenticación está cargando o tab regresando
+  if (authLoading || isTabReturning) {
+    return (
+      <Container className="py-5">
+        <Card className="shadow-lg border-0">
+          <Card.Body className="text-center py-5">
+            <Spinner animation="border" variant="primary" />
+            <h5 className="mt-3 text-muted">Verificando autenticación...</h5>
+          </Card.Body>
+        </Card>
+      </Container>
+    );
+  }
+  
+  // Solo después de que la autenticación esté resuelta, verificar si hay usuario
+  if (!user) {
+    return (
+      <Container className="py-5">
+        <Alert variant="warning">
+          <h4>Autenticación requerida</h4>
+          <p>Por favor conecta tu wallet para gestionar usuarios.</p>
+        </Alert>
+      </Container>
+    );
+  }
+
+  if (user.role !== 'moderator') {
     return (
       <Container className="py-5">
         <Alert variant="danger">
-          <h4>Access Denied</h4>
-          <p>You don't have permission to view the users list.</p>
+          <FaExclamationTriangle className="me-2" />
+          <strong>Acceso denegado</strong>
+          <p className="mb-0 mt-2">Solo los moderadores pueden acceder a la gestión de usuarios.</p>
         </Alert>
       </Container>
     );

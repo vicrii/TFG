@@ -17,6 +17,7 @@ interface AuthHookReturn {
   setShowRegister: Dispatch<SetStateAction<boolean>>;
   handleRegister: (userData: any) => Promise<User | null>; 
   checkUserForWallet: (walletAddress: string) => Promise<User | null>;
+  isTabReturning: boolean;
 }
 
 export function useAuth(): AuthHookReturn {
@@ -26,6 +27,8 @@ export function useAuth(): AuthHookReturn {
   const [user, setUser] = useState<User | null>(null);
   const [showRegister, setShowRegister] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isTabReturning, setIsTabReturning] = useState(false);
 
   // Log wallet errors silently
   useEffect(() => {
@@ -33,6 +36,32 @@ export function useAuth(): AuthHookReturn {
       console.warn('[useAuth] Wallet error detected but continuing:', walletError.message);
     }
   }, [walletError]);
+
+  // Manejo del Page Visibility API para tabs
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        // Tab se oculta
+        console.log('[useAuth] Tab hidden');
+      } else {
+        // Tab se vuelve visible
+        console.log('[useAuth] Tab visible again');
+        if (isInitialized) {
+          setIsTabReturning(true);
+          // Dar tiempo para que los procesos se restauren
+          setTimeout(() => {
+            setIsTabReturning(false);
+          }, 800); // Delay más largo para tabs
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isInitialized]);
 
   // Función para persistir estado en localStorage
   const persistState = (user: User | null) => {
@@ -58,31 +87,70 @@ export function useAuth(): AuthHookReturn {
 
   // Efecto para restaurar estado desde localStorage al inicializar
   useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        console.log('[useAuth] Starting initialization...');
+        
+        // Dar tiempo a que los wallet adapters se inicialicen
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
     const savedUser = localStorage.getItem('authUser');
     if (savedUser) {
-      try {
         const parsedUser = JSON.parse(savedUser);
+          console.log('[useAuth] Restoring user from localStorage:', parsedUser.walletAddress);
         setUser(parsedUser);
         if (parsedUser?.walletAddress) {
-          console.log('[useAuth] Restoring auth header from localStorage:', parsedUser.walletAddress);
           apiClient.setAuthHeader(parsedUser.walletAddress);
+          }
         }
+        
+        console.log('[useAuth] Initialization complete');
+        setIsInitialized(true);
+        
       } catch (error) {
-        console.error('[useAuth] Error parsing saved user, clearing localStorage');
+        console.error('[useAuth] Error during initialization:', error);
         localStorage.removeItem('authUser');
+        setIsInitialized(true);
       }
-    }
-    setLoading(false);
+    };
+
+    initializeAuth();
   }, []); // Solo ejecutar una vez al montar
+
+  // Efecto para controlar el loading state basado en inicialización
+  useEffect(() => {
+    if (isInitialized) {
+      // Delay adicional para asegurar que todo esté estable
+      const timer = setTimeout(() => {
+        console.log('[useAuth] Setting loading to false');
+        setLoading(false);
+      }, 200);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isInitialized]);
 
   // Efecto para limpiar usuario cuando la wallet se desconecta
   useEffect(() => {
-    if (!connected && user) {
+    if (!connected && user && isInitialized && !isTabReturning) {
       console.log('[useAuth] Wallet disconnected, clearing user state');
       setAuthUser(null);
       setShowRegister(false);
     }
-  }, [connected, user]);
+  }, [connected, user, isInitialized, isTabReturning]);
+
+  // Efecto para verificar usuario automáticamente cuando se conecta una wallet
+  useEffect(() => {
+    if (connected && publicKey && isInitialized && !isTabReturning) {
+      const walletAddress = publicKey.toString();
+      console.log('[useAuth] Wallet connected, checking user for:', walletAddress);
+      
+      // Solo verificar si no tenemos un usuario o si es una wallet diferente
+      if (!user || user.walletAddress !== walletAddress) {
+        checkUserForWallet(walletAddress);
+      }
+    }
+  }, [connected, publicKey, isInitialized, isTabReturning, user]);
 
   // Función para verificar usuario manualmente (llamada desde componentes cuando necesiten)
   const checkUserForWallet = async (walletAddress: string) => {
@@ -127,5 +195,6 @@ export function useAuth(): AuthHookReturn {
     setShowRegister,
     handleRegister,
     checkUserForWallet, // Exponer función para verificación manual
+    isTabReturning,
   };
 }

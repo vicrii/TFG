@@ -139,7 +139,17 @@ const SkipToContent = () => (
 
 // Componente intermedio que maneja la autenticación y la pasa a UIProvider
 function AppWithAuth() {
-  const { showRegister, handleRegister, setShowRegister, user, checkUserForWallet } = useAuth();
+  const { showRegister, handleRegister, setShowRegister, user, checkUserForWallet, loading } = useAuth();
+  
+  // Mostrar loading mientras se inicializa la autenticación
+  if (loading) {
+    return (
+      <div className="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-3">Inicializando autenticación...</p>
+      </div>
+    );
+  }
   
   return (
     <UIProvider user={user}>
@@ -191,50 +201,16 @@ function AppContent({
 
   // Efecto para verificar usuario solo cuando se conecta una wallet nueva
   useEffect(() => {
+    // El hook useAuth ahora maneja automáticamente la verificación de usuario
+    // cuando se conecta una wallet, así que solo necesitamos limpiar el estado local
     if (!connected || !publicKey) {
+      setLastCheckedWallet(null);
       return;
     }
 
     const walletAddress = publicKey.toString();
-    
-    // Solo verificar si es una wallet diferente a la última verificada
-    // y si no tenemos un usuario para esta wallet
-    if (lastCheckedWallet === walletAddress || 
-        (user && user.walletAddress === walletAddress)) {
-      return;
-    }
-
-    // Verificar usuario para esta nueva wallet
-    checkUserForWallet(walletAddress);
     setLastCheckedWallet(walletAddress);
-  }, [connected, publicKey?.toString(), user?.walletAddress, lastCheckedWallet, checkUserForWallet]);
-
-  // Efecto para reconectar la wallet automáticamente si hay usuario pero no conexión
-  useEffect(() => {
-    if (user && user.walletAddress && !connected && !publicKey) {
-      console.log('[AppContent] User exists but wallet not connected, attempting auto-reconnect...');
-      
-      // Intentar reconectar la wallet
-      const attemptReconnect = async () => {
-        try {
-          // Usar el WalletAdapter para intentar reconectar
-          const { connect } = wallet;
-          if (connect) {
-            await connect();
-            console.log('[AppContent] Wallet auto-reconnected successfully');
-          }
-        } catch (error) {
-          console.warn('[AppContent] Auto-reconnect failed (expected on first load):', error);
-          // No mostrar error ya que es normal que falle en algunos casos
-        }
-      };
-
-      // Delay pequeño para dar tiempo a que los adapters se inicialicen
-      const timeoutId = setTimeout(attemptReconnect, 1000);
-      
-      return () => clearTimeout(timeoutId);
-    }
-  }, [user, connected, publicKey, wallet]);
+  }, [connected, publicKey?.toString()]);
 
   // Efecto para verificar la conexión con el backend
   useEffect(() => {
@@ -275,7 +251,7 @@ function AppContent({
         <SkipToContent />
         {backendConnected === false && (
           <Alert variant="danger" className="text-center mb-0 py-2">
-            <strong>Servidor no disponible:</strong> Lo sentimos, el servidor no está disponible en este momento. Si el problema persiste, contacte con soporte@solanalearn.com
+            <strong>Servidor no disponible:</strong> Lo sentimos, el servidor no está disponible en este momento. Por favor, inténtalo más tarde.
             <Button 
               variant="link" 
               className="p-0 ms-2 text-decoration-none" 

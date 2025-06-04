@@ -21,7 +21,7 @@ type EditableCourseData = {
 
 const CoursesList: React.FC = () => {
   const wallet = useWallet();
-  const { user } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
   const navigate = useNavigate();
 
   const walletAddress = wallet?.publicKey?.toString();
@@ -60,6 +60,14 @@ const CoursesList: React.FC = () => {
   const [courseToDelete, setCourseToDelete] = useState<any | null>(null);
   
   useEffect(() => {
+    console.log('CoursesList effect triggered:', { user, authLoading, isTabReturning, walletConnected, walletAddress });
+    
+    // Si la autenticación aún está cargando o la tab está regresando, no hacer nada
+    if (authLoading || isTabReturning) {
+      console.log('Auth still loading or tab returning, waiting...');
+      return;
+    }
+    
     let isComponentMounted = true;
 
     const loadCourses = async () => {
@@ -93,7 +101,7 @@ const CoursesList: React.FC = () => {
     return () => {
       isComponentMounted = false;
     };
-  }, [walletConnected, walletAddress]);
+  }, [walletConnected, walletAddress, authLoading, isTabReturning]);
   
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -273,6 +281,39 @@ const CoursesList: React.FC = () => {
       setIsSubmitting(false);
     }
   };
+
+  // Mostrar spinner mientras la autenticación está cargando o tab regresando
+  if (authLoading || isTabReturning) {
+    return (
+      <div className="text-center py-5">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-3">Verificando autenticación...</p>
+      </div>
+    );
+  }
+  
+  // Solo después de que la autenticación esté resuelta, verificar si hay usuario
+  if (!user) {
+    return (
+      <Container className="py-5">
+        <Alert variant="warning">
+          <h4>Autenticación requerida</h4>
+          <p>Por favor conecta tu wallet para gestionar cursos.</p>
+        </Alert>
+      </Container>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Container className="py-5">
+        <div className="text-center">
+          <Spinner animation="border" variant="primary" />
+          <p className="mt-3">Cargando cursos...</p>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container fluid className="px-4 py-4" style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>

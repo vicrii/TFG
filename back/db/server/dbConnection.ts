@@ -1,7 +1,4 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 // Aumentar tiempos de conexión y opciones de reconexión
 const connectDB = async (): Promise<void> => {
@@ -13,6 +10,13 @@ const connectDB = async (): Promise<void> => {
                       'mongodb+srv://vicridev:OvDwlhYiLfdOdhSS@db.e0byx.mongodb.net/?retryWrites=true&w=majority';
     
     console.log('Conectando a MongoDB Atlas...');
+    console.log('URI detectada:', mongoURI.includes('mongodb+srv') ? 'MongoDB Atlas (correcto)' : mongoURI);
+    console.log('Variables de entorno disponibles:', {
+      MONGO_URI: process.env.MONGO_URI ? 'SET' : 'NOT SET',
+      MONGODB_URI: process.env.MONGODB_URI ? 'SET' : 'NOT SET',
+      DB_URI: process.env.DB_URI ? 'SET' : 'NOT SET',
+      NODE_ENV: process.env.NODE_ENV
+    });
     
     // Opciones de conexión mejoradas para Atlas
     const options = {

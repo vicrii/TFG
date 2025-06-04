@@ -52,26 +52,6 @@ cp back/.env.example back/.env
 npm run dev
 ```
 
-### 🧪 **Datos de Prueba**
-
-#### **Cursos de Ejemplo**
-- **"Introducción a Blockchain"**: Curso básico con 5 lecciones
-- **"Desarrollo Solana"**: Curso avanzado con ejercicios de código
-- **"Smart Contracts"**: Curso con quizzes y evaluaciones
-
-#### **Usuarios de Prueba**
-- **Admin**: Puede crear usuarios, gestionar todos los cursos
-- **Instructor**: Puede crear cursos, ver analytics, gestionar estudiantes
-- **Estudiante**: Puede inscribirse, ver progreso, completar lecciones
-
-### 📝 **Notas Adicionales**n
-- La aplicación soporta autenticación tradicional y blockchain (Solana)
-- Responsive design compatible con móviles, tablets y desktop
-- HTTPS configurado en producción con certificados SSL
-- Base de datos MongoDB con esquemas relacionales
-
----
-
 ## 🏗️ Arquitectura MVC
 
 ### **Patrón Modelo-Vista-Controlador**
@@ -424,7 +404,6 @@ MIT License - Ver [LICENSE](LICENSE) para más detalles.
 
 **🎓 Proyecto Final DAW - Desarrollo de Aplicaciones Web**
 
-*Cumpliendo todos los criterios específicos de DAW*
 
 **[🚀 Demo](https://solanalearn.up.railway.app)**
 

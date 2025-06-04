@@ -49,7 +49,7 @@ interface UserStats {
 }
 
 const ModeratorDashboardPage: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [globalStats, setGlobalStats] = useState<IGlobalStats | null>(null);
@@ -57,6 +57,14 @@ const ModeratorDashboardPage: React.FC = () => {
   const [userStats, setUserStats] = useState<UserStats | null>(null);
 
   useEffect(() => {
+    console.log('ModeratorDashboard effect triggered:', { user, authLoading, isTabReturning });
+    
+    // Si la autenticación aún está cargando o la tab está regresando, no hacer nada
+    if (authLoading || isTabReturning) {
+      console.log('Auth still loading or tab returning, waiting...');
+      return;
+    }
+    
     const fetchDashboardData = async () => {
       if (!user?.walletAddress || user.role !== 'moderator') {
         setError('Acceso denegado. Solo moderadores pueden ver este dashboard.');
@@ -174,7 +182,7 @@ const ModeratorDashboardPage: React.FC = () => {
     };
 
     fetchDashboardData();
-  }, [user]);
+  }, [user, authLoading, isTabReturning]);
 
   if (loading) {
     return (

@@ -110,3 +110,7 @@ temp/
 .back/scripts/ffmpeg/bin/ffplay.exe
 .back/scripts/ffmpeg/bin/ffmpeg.exe
 .back/scripts/ffmpeg/bin/ffprobe.exe
+
+# Configuración sensible para profesores/admin
+GUIA_PROFESORES_ADMIN.txt
+

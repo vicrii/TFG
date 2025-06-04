@@ -11,7 +11,7 @@ import { FaArrowLeft, FaArrowRight, FaBook, FaCheck, FaLock, FaExclamationTriang
 
 const LessonDetail: React.FC = () => {
   const { courseId, lessonNumber } = useParams<{ courseId: string, lessonNumber: string }>();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
   const navigate = useNavigate();
   
   const [lesson, setLesson] = useState<any>(null);
@@ -28,11 +28,11 @@ const LessonDetail: React.FC = () => {
   const [warningMessage, setWarningMessage] = useState<string>('');
 
   useEffect(() => {
-    console.log('Effect triggered with:', { user, authLoading, courseId, lessonNumber });
+    console.log('Effect triggered with:', { user, authLoading, isTabReturning, courseId, lessonNumber });
     
-    // Si la autenticación aún está cargando, no hacer nada
-    if (authLoading) {
-      console.log('Auth still loading, waiting...');
+    // Si la autenticación aún está cargando o la tab está regresando, no hacer nada
+    if (authLoading || isTabReturning) {
+      console.log('Auth still loading or tab returning, waiting...');
       return;
     }
     
@@ -54,7 +54,7 @@ const LessonDetail: React.FC = () => {
     // Verificar inscripción antes de cargar la lección
     checkEnrollmentAndLoad();
     setActiveTab('content');
-  }, [user, authLoading, courseId, lessonNumber]);
+  }, [user, authLoading, isTabReturning, courseId, lessonNumber]);
   
   // Redirigir si la anterior no está completada (pero permitir si la anterior no tiene quiz)
   useEffect(() => {

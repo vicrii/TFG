@@ -27,7 +27,7 @@ const CourseDetail: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, loading: authLoading, isTabReturning } = useAuth();
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [previewLessons, setPreviewLessons] = useState<Lesson[]>([]);
@@ -91,6 +91,14 @@ const CourseDetail: React.FC = () => {
 
   // OPTIMIZED: Reduce dependencies and prevent unnecessary re-renders
   useEffect(() => {
+    console.log('CourseDetail effect triggered:', { user, authLoading, isTabReturning, courseId });
+    
+    // Si la autenticación aún está cargando o la tab está regresando, no hacer nada
+    if (authLoading || isTabReturning) {
+      console.log('Auth still loading or tab returning, waiting...');
+      return;
+    }
+    
     if (!courseId) {
       navigate('/courses');
       return;
@@ -188,7 +196,7 @@ const CourseDetail: React.FC = () => {
     return () => {
       isComponentMounted = false;
     };
-  }, [courseId, user?.walletAddress]); // SIMPLIFIED: Only essential dependencies
+  }, [courseId, user?.walletAddress, authLoading, isTabReturning]); // Added authLoading and isTabReturning dependencies
 
   useEffect(() => {
     if (showAddLessonMsg) {
