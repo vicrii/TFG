@@ -1,6 +1,6 @@
 # 🐳 Docker Compose - Plataforma de Aprendizaje Blockchain - Proyecto DAW
 # Uso: docker-compose up --build
-# URLs: Frontend http://localhost:3000 | Backend http://localhost:5000
+# URLs: Frontend http://localhost:5173 | Backend http://localhost:5000
 
 version: '3.8'
 
@@ -45,7 +45,7 @@ services:
       
       # Seguridad
       JWT_SECRET: super-secret-jwt-key-for-development-daw-project-2024
-      CORS_ORIGIN: http://localhost:3000
+      CORS_ORIGIN: http://localhost:5173
       
       # Uploads
       UPLOAD_DIR: /app/uploads

@@ -27,7 +27,7 @@ Railway es nuestra plataforma recomendada para el despliegue de la aplicación. 
 Asegurate de que tu proyecto tenga esta estructura:
 
 ```
-plataforma-educativa/
+TFG/
 ├── railway.toml          # ✅ Configuración de Railway
 ├── Dockerfile.simple     # ✅ Dockerfile optimizado
 ├── package.json          # ✅ Scripts de build
@@ -77,7 +77,7 @@ PORT=8080
 
 # Seguridad
 JWT_SECRET=tu-secreto-super-seguro-para-produccion
-CORS_ORIGIN=https://tu-dominio.railway.app
+CORS_ORIGIN=https://solanalearn.up.railway.app
 
 # YouTube API (opcional)
 YOUTUBE_API_KEY=AIza...
@@ -279,7 +279,7 @@ COPY --from=frontend-builder /app/front/dist ./public
 3. **Add Domain**
 4. **Configurar DNS:**
    ```
-   CNAME: tu-dominio.com → railway-production-url
+   CNAME: tu-dominio.com → solanalearn.up.railway.app
    ```
 
 ### **SSL/HTTPS**
@@ -407,7 +407,7 @@ RUN npm cache clean --force
 #### **Error: CORS**
 ```bash
 # Actualizar CORS_ORIGIN con la URL de Railway
-CORS_ORIGIN=https://tu-proyecto-production.railway.app
+CORS_ORIGIN=https://solanalearn.up.railway.app
 ```
 
 ### **Performance Issues**

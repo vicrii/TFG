@@ -6,7 +6,7 @@ La **API REST** de la Plataforma de Aprendizaje Blockchain está construida sigu
 
 ### **URLs Base**
 - **Desarrollo**: `http://localhost:5000/api`
-- **Producción**: `https://your-api-url.railway.app/api`
+- **Producción**: `https://solanalearn.up.railway.app/api`
 
 ### **Características**
 - ✅ **RESTful**: Verbos HTTP estándar
@@ -775,7 +775,7 @@ X-RateLimit-Reset: 1642675200
 ```javascript
 // Configuración CORS
 {
-  origin: ['http://localhost:3000', 'https://your-domain.com'],
+  origin: ['http://localhost:5173', 'https://solanalearn.up.railway.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

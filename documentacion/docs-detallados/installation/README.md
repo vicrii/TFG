@@ -28,8 +28,8 @@ docker --version
 docker-compose --version
 
 # Clonar repositorio
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 ```
 
 #### **2. Configuración de Variables**
@@ -68,7 +68,7 @@ docker-compose logs -f
 ```
 
 #### **4. Verificar Instalación**
-- **Frontend**: http://localhost:3000
+- **Frontend**: http://localhost:5173
 - **Backend**: http://localhost:5000/api/health
 - **MongoDB**: localhost:27017
 
@@ -81,8 +81,8 @@ node --version  # Debe ser 20.x+
 npm --version
 
 # Clonar repositorio
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 ```
 
 #### **2. Instalar Dependencias**
@@ -152,7 +152,7 @@ npm run dev:front   # Terminal 2
 ```
 
 #### **6. Verificar Instalación**
-- **Frontend**: http://localhost:5173 (Vite) o http://localhost:3000
+- **Frontend**: http://localhost:5173 (Vite)
 - **Backend**: http://localhost:5000
 - **API Health**: http://localhost:5000/api/health
 
@@ -185,7 +185,7 @@ NODE_ENV=production
 PORT=5000
 MONGODB_URI=mongodb+srv://...tu-atlas-uri
 JWT_SECRET=super-secreto-produccion
-CORS_ORIGIN=https://tu-dominio.com
+CORS_ORIGIN=https://solanalearn.up.railway.app
 ```
 
 #### **3. Despliegue en Railway**
@@ -219,7 +219,7 @@ railway up
 ```nginx
 server {
     listen 80;
-    server_name tu-dominio.com;
+    server_name solanalearn.up.railway.app;
     
     # Redirigir a HTTPS
     return 301 https://$server_name$request_uri;
@@ -227,7 +227,7 @@ server {
 
 server {
     listen 443 ssl http2;
-    server_name tu-dominio.com;
+    server_name solanalearn.up.railway.app;
     
     # Certificados SSL
     ssl_certificate /path/to/cert.pem;
@@ -235,7 +235,7 @@ server {
     
     # Frontend
     location / {
-        proxy_pass http://localhost:3000;
+        proxy_pass http://localhost:5173;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
     }
@@ -300,7 +300,7 @@ https.createServer(options, app).listen(443);
 sudo apt install certbot python3-certbot-nginx
 
 # Obtener certificado
-sudo certbot --nginx -d tu-dominio.com
+sudo certbot --nginx -d solanalearn.up.railway.app
 
 # Renovación automática
 sudo crontab -e
@@ -432,7 +432,7 @@ docker-compose logs -f
 ### **Checklist de Verificación**
 
 #### **✅ Servicios Funcionando**
-- [ ] Frontend accesible en http://localhost:3000
+- [ ] Frontend accesible en http://localhost:5173
 - [ ] Backend API responde en http://localhost:5000/api/health
 - [ ] Base de datos conectada correctamente
 - [ ] Sin errores en logs
@@ -476,7 +476,7 @@ curl http://localhost:5000/api/courses
 1. **Revisa logs**: Siempre revisar logs primero
 2. **Verifica requisitos**: Node.js, MongoDB, etc.
 3. **Consulta documentación**: README principal y docs/
-4. **Issues GitHub**: [Reportar problema](https://github.com/tu-usuario/plataforma-educativa/issues)
+4. **Issues GitHub**: [Reportar problema](https://github.com/vicrii/TFG/issues)
 5. **Email**: soporte@plataforma-educativa.com
 
 ### **Para evaluadores DAW:**

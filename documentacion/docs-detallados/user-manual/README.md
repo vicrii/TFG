@@ -19,7 +19,7 @@ Bienvenido a la **Plataforma de Aprendizaje Blockchain**, una aplicación web mo
 
 #### **Opción A: Navegador Web**
 1. Abre tu navegador favorito
-2. Navega a: https://your-app-url.railway.app
+2. Navega a: https://solanalearn.up.railway.app
 3. La aplicación es responsive - funciona en móvil, tablet y desktop
 
 #### **Opción B: Usando Credenciales de Prueba**

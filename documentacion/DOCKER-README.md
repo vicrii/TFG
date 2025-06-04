@@ -4,8 +4,8 @@
 
 ```bash
 # 1. Clonar proyecto
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 
 # 2. Iniciar todo con Docker
 docker-compose up --build
@@ -13,7 +13,7 @@ docker-compose up --build
 
 ## 📱 URLs después de iniciar
 
-- 🌐 **Frontend**: http://localhost:3000
+- 🌐 **Frontend**: http://localhost:5173
 - 🔧 **Backend**: http://localhost:5000
 - 🗄️ **MongoDB**: mongodb://localhost:27017
 
@@ -62,7 +62,7 @@ docker-compose ps
 
 - **mongodb**: Base de datos MongoDB 7.0
 - **backend**: API Node.js con Express (puerto 5000)
-- **frontend**: Aplicación React con Vite (puerto 3000)
+- **frontend**: Aplicación React con Vite (puerto 5173)
 
 ## 📝 Variables de Entorno Opcionales
 
@@ -79,7 +79,7 @@ YOUTUBE_API_KEY=tu-clave-youtube
 ### Puerto en uso
 ```bash
 # Ver qué proceso usa el puerto
-netstat -ano | findstr :3000
+netstat -ano | findstr :5173
 netstat -ano | findstr :5000
 
 # Cambiar puertos en docker-compose.yml si necesario
@@ -101,7 +101,7 @@ docker-compose up --build
 
 ## ✅ Verificación
 
-1. ✅ Frontend carga en http://localhost:3000
+1. ✅ Frontend carga en http://localhost:5173
 2. ✅ Backend responde en http://localhost:5000/api/health
 3. ✅ MongoDB conectado (no errores en logs)
 4. ✅ Puedes hacer login con credenciales de prueba

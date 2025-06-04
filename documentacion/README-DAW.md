@@ -12,7 +12,7 @@
 ![Responsive](https://img.shields.io/badge/Responsive-✓-success)
 ![WAI-A](https://img.shields.io/badge/Accesibilidad-WAI--A-success)
 
-**🌐 [DEMO EN VIVO](https://your-app-url.railway.app)** | **📁 [REPOSITORIO](https://github.com/tu-usuario/plataforma-educativa)**
+**🌐 [DEMO EN VIVO](https://solanalearn.up.railway.app)** | **📁 [REPOSITORIO](https://github.com/vicrii/TFG)**
 
 </div>
 
@@ -32,8 +32,8 @@
 
 | Servicio | Puerto | URL Local | URL Producción |
 |----------|---------|-----------|----------------|
-| **Frontend** | 3000 | http://localhost:3000 | https://your-app-url.railway.app |
-| **Backend API** | 5000 | http://localhost:5000/api | https://your-api-url.railway.app/api |
+| **Frontend** | 5173 | http://localhost:5173 | https://solanalearn.up.railway.app |
+| **Backend API** | 5000 | http://localhost:5000/api | https://solanalearn.up.railway.app/api |
 | **MongoDB** | 27017 | mongodb://localhost:27017 | MongoDB Atlas |
 
 ### 🚀 **Instrucciones de Uso**
@@ -41,13 +41,13 @@
 #### **Con Docker (Recomendado)**
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 
 # 2. Ejecutar con Docker
 docker-compose up --build
 
-# 3. Acceder: http://localhost:3000
+# 3. Acceder: http://localhost:5173
 ```
 
 #### **Manual**
@@ -405,7 +405,7 @@ const requireRole = (role: string) => (req, res, next) => {
 ## 📁 Estructura del Proyecto
 
 ```
-📦 plataforma-educativa/
+📦 TFG/
 ├── 📂 front/                 # Frontend (VISTA)
 │   ├── 📂 public/
 │   │   └── index.html        # HTML5 principal
@@ -436,16 +436,16 @@ const requireRole = (role: string) => (req, res, next) => {
 
 ### **Opción 1: Docker**
 ```bash
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 docker-compose up --build
 ```
 
 ### **Opción 2: Manual**
 ```bash
 # 1. Clonar
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 
 # 2. Instalar
 npm run install:all
@@ -464,9 +464,7 @@ npm run dev
 
 | Documento | Ubicación |
 |-----------|-----------|
-| **Manual de Instalación** | [docs/installation/README.md](docs/installation/README.md) |
 | **Manual de Usuario** | [docs/user-manual/README.md](docs/user-manual/README.md) |
-| **Manual de Administración** | [docs/admin-manual/README.md](docs/admin-manual/README.md) |
 | **Documentación API** | [docs/api/README.md](docs/api/README.md) |
 
 ---
@@ -488,8 +486,8 @@ npm run test:e2e
 
 ## 🔗 Enlaces Importantes
 
-- **🌐 Demo**: https://your-app-url.railway.app
-- **📂 Repositorio**: https://github.com/tu-usuario/plataforma-educativa
+- **🌐 Demo**: https://solanalearn.up.railway.app
+- **📂 Repositorio**: https://github.com/vicrii/TFG
 - **📧 Soporte**: soporte@plataforma-educativa.com
 
 ---
@@ -506,6 +504,6 @@ MIT License - Ver [LICENSE](LICENSE) para más detalles.
 
 *Cumpliendo todos los criterios específicos de DAW*
 
-**[⚡ Empezar](docs/installation/README.md)** | **[📖 Docs](docs/)** | **[🚀 Demo](https://your-app-url.railway.app)**
+**[📖 Docs](docs/)** | **[🚀 Demo](https://solanalearn.up.railway.app)**
 
 </div> 

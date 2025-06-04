@@ -121,8 +121,9 @@
    sudo systemctl enable nginx
    
    # Clonar repositorio
-   git clone https://github.com/tu-usuario/tu-repo.git
-   cd tu-repo/front
+   git clone https://github.com/vicrii/TFG.git
+   cd TFG
+   cd front
    npm install
    npm run build
    

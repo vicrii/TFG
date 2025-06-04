@@ -12,28 +12,20 @@
 ![Responsive](https://img.shields.io/badge/Responsive-✓-success)
 ![WAI-A](https://img.shields.io/badge/Accesibilidad-WAI--A-success)
 
-**🌐 [DEMO EN VIVO](https://your-app-url.railway.app)** | **📁 [REPOSITORIO](https://github.com/tu-usuario/plataforma-educativa)**
+**🌐 [DEMO EN VIVO](https://solanalearn.up.railway.app)** | **📁 [REPOSITORIO](https://github.com/vicrii/TFG)**
 
 </div>
 
 ---
 
-## 📋 Información de Entrega DAW
-
-### 🎯 **Credenciales de Acceso**
-
-| Tipo de Usuario | Email/Wallet | Contraseña | Permisos |
-|----------------|--------------|------------|----------|
-| **Administrador** | `admin@plataforma.com` | `admin123` | Gestión completa del sistema |
-| **Instructor** | `instructor@plataforma.com` | `instructor123` | Crear y gestionar cursos |
-| **Estudiante** | `estudiante@plataforma.com` | `estudiante123` | Acceder a cursos y lecciones |
+## 📋 Información
 
 ### 🔌 **Puertos y URLs**
 
 | Servicio | Puerto | URL Local | URL Producción |
 |----------|---------|-----------|----------------|
-| **Frontend** | 3000 | http://localhost:3000 | https://your-app-url.railway.app |
-| **Backend API** | 5000 | http://localhost:5000/api | https://your-api-url.railway.app/api |
+| **Frontend** | 5173 | http://localhost:5173 | https://solanalearn.up.railway.app |
+| **Backend API** | 5000 | http://localhost:5000/api | https://solanalearn.up.railway.app/api |
 | **MongoDB** | 27017 | mongodb://localhost:27017 | MongoDB Atlas |
 
 ### 🚀 **Instrucciones de Uso**
@@ -41,13 +33,13 @@
 #### **Con Docker (Recomendado)**
 ```bash
 # 1. Clonar repositorio
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 
 # 2. Ejecutar con Docker
 docker-compose up --build
 
-# 3. Acceder: http://localhost:3000
+# 3. Acceder: http://localhost:5173
 ```
 
 #### **Manual**
@@ -77,7 +69,6 @@ npm run dev
 ### 📝 **Notas Adicionales**
 - La aplicación soporta autenticación tradicional y blockchain (Solana)
 - Responsive design compatible con móviles, tablets y desktop
-- Accesibilidad WAI-A implementada
 - HTTPS configurado en producción con certificados SSL
 - Base de datos MongoDB con esquemas relacionales
 
@@ -126,7 +117,7 @@ graph TB
 - **React 19**: Framework principal para interfaces dinámicas
 - **TypeScript**: Tipado estático para mejor desarrollo
 - **Bootstrap 5**: Framework CSS para responsive design
-- **HTML5 semántico**: Estructura accesible y SEO-friendly
+- **HTML5 semántico**: Estructura accesible
 - **CSS3 moderno**: Animations, Grid, Flexbox, Custom Properties
 
 #### **🎮 CONTROLADOR (Backend)**
@@ -511,7 +502,7 @@ const requireRole = (role: string) => (req, res, next) => {
 ## 📁 Estructura del Proyecto
 
 ```
-📦 plataforma-educativa/
+📦 TFG/
 ├── 📂 front/                 # Frontend (VISTA)
 │   ├── 📂 public/
 │   │   └── index.html        # HTML5 principal
@@ -534,9 +525,7 @@ const requireRole = (role: string) => (req, res, next) => {
 ├── docker-compose.yml        # Orquestación
 ├── README.md                 # Este archivo
 └── docs/                     # Documentación
-    ├── installation/         # Manual de instalación
     ├── user-manual/          # Manual de usuario
-    ├── admin-manual/         # Manual de administración
     └── api/                  # Documentación API
 ```
 
@@ -546,16 +535,16 @@ const requireRole = (role: string) => (req, res, next) => {
 
 ### **Opción 1: Docker**
 ```bash
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 docker-compose up --build
 ```
 
 ### **Opción 2: Manual**
 ```bash
 # 1. Clonar
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 
 # 2. Instalar
 npm run install:all
@@ -574,9 +563,7 @@ npm run dev
 
 | Documento | Ubicación |
 |-----------|-----------|
-| **Manual de Instalación** | [docs/installation/README.md](docs/installation/README.md) |
 | **Manual de Usuario** | [docs/user-manual/README.md](docs/user-manual/README.md) |
-| **Manual de Administración** | [docs/admin-manual/README.md](docs/admin-manual/README.md) |
 | **Documentación API** | [docs/api/README.md](docs/api/README.md) |
 
 ---
@@ -598,8 +585,8 @@ npm run test:e2e
 
 ## 🔗 Enlaces Importantes
 
-- **🌐 Demo**: https://your-app-url.railway.app
-- **📂 Repositorio**: https://github.com/tu-usuario/plataforma-educativa
+- **🌐 Demo**: https://solanalearn.up.railway.app
+- **📂 Repositorio**: https://github.com/vicrii/TFG
 - **📧 Soporte**: soporte@plataforma-educativa.com
 
 ---
@@ -616,6 +603,6 @@ MIT License - Ver [LICENSE](LICENSE) para más detalles.
 
 *Cumpliendo todos los criterios específicos de DAW*
 
-**[⚡ Empezar](docs/installation/README.md)** | **[📖 Docs](docs/)** | **[🚀 Demo](https://your-app-url.railway.app)**
+**[📖 Docs](docs/)** | **[🚀 Demo](https://solanalearn.up.railway.app)**
 
 </div> 

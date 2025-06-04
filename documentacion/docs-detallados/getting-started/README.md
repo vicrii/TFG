@@ -30,8 +30,8 @@ Elige una de estas opciones:
 
 ```bash
 # Clonar el proyecto
-git clone https://github.com/tu-usuario/plataforma-educativa.git
-cd plataforma-educativa
+git clone https://github.com/vicrii/TFG.git
+cd TFG
 
 # Verificar la estructura
 ls -la
@@ -306,7 +306,7 @@ npm install
 ¿Problemas con la instalación?
 
 - 📖 **Documentación completa**: [Ver todas las guías](../README.md)
-- 🐛 **Reportar problema**: [GitHub Issues](https://github.com/tu-usuario/plataforma-educativa/issues)
+- 🐛 **Reportar problema**: [GitHub Issues](https://github.com/vicrii/TFG/issues)
 - 💬 **Comunidad**: [Discord](https://discord.gg/plataforma-educativa)
 - 📧 **Email**: soporte@plataforma-educativa.com
 
