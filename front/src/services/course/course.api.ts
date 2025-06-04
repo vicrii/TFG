@@ -111,7 +111,7 @@ export const courseApi = {
       
       try {
         // Intentar obtener de la API
-        const course = await apiClient.get<ICourseData>(`/api/public/courses/${courseId}`);
+        const course = await apiClient.get<ICourseData>(`/public/courses/${courseId}`);
         // Guardar en caché
         saveToCache(cacheKey, course);
         return course;
