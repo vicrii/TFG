@@ -5,9 +5,8 @@ import { Navbar, Container, Nav, NavDropdown, Button, Tooltip, OverlayTrigger } 
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { 
-  FaRobot, FaUserShield, FaPlus, FaList, FaUsers, FaYoutube, 
-  FaBook, FaHome, FaUser, FaGraduationCap, FaSun, FaMoon, 
-  FaChartLine, FaCog, FaFont, FaAccessibleIcon, FaAdjust, FaCode
+  FaRobot, FaUserShield, FaPlus, FaList, FaUsers, 
+  FaBook, FaHome, FaUser, FaGraduationCap, FaCog, FaFont, FaCode, FaFileAlt
 } from 'react-icons/fa';
 import { useUI } from '../../context/ThemeContext';
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -30,19 +29,19 @@ const SafeWalletButton = () => {
 };
 
 const AppNavbar: React.FC<AppNavbarProps> = ({ 
+  user,
+  connected,
   onThemeToggle,
   className = ''
 }) => {
   const location = useLocation();
-  const { user } = useAuth();
   const { 
-    theme, toggleTheme, isDarkMode, fontSize, setFontSize,
-    toggleHighContrast, toggleAnimations, highContrastMode, 
-    animationsEnabled, setTheme
+    fontSize, setFontSize,
+    toggleAnimations, 
+    animationsEnabled
   } = useUI();
   const [scrolled, setScrolled] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const { connected } = useWallet();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const themeMenuRef = useRef<HTMLDivElement>(null);
   
@@ -50,17 +49,13 @@ const AppNavbar: React.FC<AppNavbarProps> = ({
   
   // Determinar si la ruta actual está en la sección de perfil o configuración
   const isProfileSection = () => {
-    return location.pathname === '/profile' || 
-           location.pathname === '/settings';
+    return location.pathname === '/profile';
   };
 
   const isModeratorSection = () => {
     return location.pathname === '/moderator' || 
            location.pathname === '/create-course' || 
-           location.pathname === '/transcriber' ||
-           location.pathname === '/courses-list' ||
-           location.pathname === '/users-list' ||
-           location.pathname === '/code-test';
+           location.pathname === '/test-editor';
   };
 
   const isCoursesSection = () => {
@@ -72,6 +67,13 @@ const AppNavbar: React.FC<AppNavbarProps> = ({
   const isUsersSection = () => {
     return location.pathname === '/users-list';
   };
+
+  const isProfileActive = 
+    location.pathname === '/profile' ||
+    location.pathname === '/my-courses';
+
+  const isToolsActive = 
+    location.pathname === '/test-editor';
 
   // Escuchar el evento de scroll para cambiar la apariencia del navbar
   useEffect(() => {
@@ -130,10 +132,10 @@ const AppNavbar: React.FC<AppNavbarProps> = ({
 
   return (
     <Navbar 
-      bg={isDarkMode ? 'dark' : 'white'} 
-      variant={isDarkMode ? 'dark' : 'light'} 
+      bg="white" 
+      variant="light" 
       expand="lg" 
-      className={`py-2 navbar-custom shadow-sm fixed-top ${scrolled ? 'scrolled' : ''} ${highContrastMode ? 'high-contrast' : ''} ${className}`}
+      className={`py-2 navbar-custom shadow-sm fixed-top ${scrolled ? 'scrolled' : ''} ${className}`}
       expanded={expanded}
       onToggle={setExpanded}
     >
@@ -203,9 +205,6 @@ const AppNavbar: React.FC<AppNavbarProps> = ({
                 <NavDropdown.Item as={Link} to="/profile" className="dropdown-item-custom" onClick={() => setExpanded(false)}>
                   <FaUser className="dropdown-icon" /> Mi Perfil
                 </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/settings" className="dropdown-item-custom" onClick={() => setExpanded(false)}>
-                  <FaCog className="dropdown-icon" /> Configuración
-                </NavDropdown.Item>
               </NavDropdown>
             ) : (
             <Nav.Link 
@@ -236,13 +235,6 @@ const AppNavbar: React.FC<AppNavbarProps> = ({
                 <NavDropdown.Item as={Link} to="/create-course" className="dropdown-item-custom" onClick={() => setExpanded(false)}>
                   <FaPlus className="dropdown-icon" /> Añadir Curso
                 </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/transcriber" className="dropdown-item-custom" onClick={() => setExpanded(false)}>
-                  <FaYoutube className="dropdown-icon" /> Generar con IA
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/code-test" className="dropdown-item-custom" onClick={() => setExpanded(false)}>
-                  <FaCode className="dropdown-icon" /> Pruebas de Código
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
                 <NavDropdown.Item as={Link} to="/courses-list" className="dropdown-item-custom" onClick={() => setExpanded(false)}>
                   <FaList className="dropdown-icon" /> Listado de Cursos
                 </NavDropdown.Item>
@@ -252,158 +244,96 @@ const AppNavbar: React.FC<AppNavbarProps> = ({
               </NavDropdown>
             )}
             
-            {/* Menú de accesibilidad y tema */}
+            {/* Menú de accesibilidad */}
             <div className="position-relative" ref={themeMenuRef}>
               <OverlayTrigger
                 placement="bottom"
                 overlay={(props) => renderTooltip(props, 'Opciones de accesibilidad')}
               >
             <Button 
-              variant={isDarkMode ? "outline-light" : "outline-dark"} 
+              variant="outline-primary" 
               size="sm" 
-              className="ms-2 theme-toggle-btn d-flex align-items-center justify-content-center"
+              className="ms-2 d-flex align-items-center justify-content-center"
                   onClick={() => setShowThemeMenu(!showThemeMenu)}
-                  aria-label="Opciones de accesibilidad y tema"
+                  aria-label="Opciones de accesibilidad"
                   aria-expanded={showThemeMenu}
                   aria-controls="theme-dropdown-menu"
               style={{ width: '38px', height: '38px', borderRadius: '50%', padding: 0 }}
             >
-              {isDarkMode ? <FaSun size={16} /> : <FaMoon size={16} />}
+              <FaCog size={16} />
             </Button>
               </OverlayTrigger>
 
               {showThemeMenu && (
                 <div 
                   id="theme-dropdown-menu"
-                  className={`theme-dropdown-menu p-3 shadow ${isDarkMode ? 'bg-dark text-white' : 'bg-white text-dark'}`}
+                  className="theme-dropdown-menu p-3 shadow bg-white text-dark"
                 >
-                  <h6 className="border-bottom pb-2 mb-3">Apariencia y Accesibilidad</h6>
-                  
-                  <div className="mb-3">
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <span className="fw-bold">Tema</span>
-                      <Button 
-                        variant="link" 
-                        size="sm" 
-                        className="p-0 text-decoration-none" 
-                        onClick={toggleTheme}
-                      >
-                        {isDarkMode ? 'Cambiar a claro' : 'Cambiar a oscuro'}
-                      </Button>
+                  <h6 className="border-bottom pb-2 mb-3">Configuración</h6>
+                    
+                    <div className="mb-3">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <span className="fw-bold">Tamaño de texto</span>
+                      </div>
+                      <div className="theme-options d-flex gap-2">
+                        <Button 
+                          variant={fontSize === 'small' ? 'primary' : 'outline-secondary'} 
+                          size="sm" 
+                          onClick={() => handleFontSizeChange('small')}
+                          aria-pressed={fontSize === 'small'}
+                        >
+                          <FaFont size={12} className="me-1" /> Pequeño
+                        </Button>
+                        <Button 
+                          variant={fontSize === 'medium' ? 'primary' : 'outline-secondary'} 
+                          size="sm" 
+                          onClick={() => handleFontSizeChange('medium')}
+                          aria-pressed={fontSize === 'medium'}
+                        >
+                          <FaFont size={14} className="me-1" /> Mediano
+                        </Button>
+                        <Button 
+                          variant={fontSize === 'large' ? 'primary' : 'outline-secondary'} 
+                          size="sm" 
+                          onClick={() => handleFontSizeChange('large')}
+                          aria-pressed={fontSize === 'large'}
+                        >
+                          <FaFont size={16} className="me-1" /> Grande
+                        </Button>
+                      </div>
                     </div>
-                    <div className="theme-options d-flex gap-2">
-                      <Button 
-                        variant={theme === 'light' ? 'primary' : 'outline-secondary'} 
-                        size="sm" 
-                        onClick={() => {
-                          setTheme('light');
-                          setShowThemeMenu(false);
-                        }}
-                        aria-pressed={theme === 'light'}
-                      >
-                        <FaSun className="me-1" /> Claro
-                      </Button>
-                      <Button 
-                        variant={theme === 'dark' ? 'primary' : 'outline-secondary'} 
-                        size="sm" 
-                        onClick={() => {
-                          setTheme('dark');
-                          setShowThemeMenu(false);
-                        }}
-                        aria-pressed={theme === 'dark'}
-                      >
-                        <FaMoon className="me-1" /> Oscuro
-                      </Button>
-                      <Button 
-                        variant={theme === 'system' ? 'primary' : 'outline-secondary'} 
-                        size="sm" 
-                        onClick={() => {
-                          setTheme('system');
-                          setShowThemeMenu(false);
-                        }}
-                        aria-pressed={theme === 'system'}
-                      >
-                        Sistema
-                      </Button>
+                    
+                    <div className="accessibility-options">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <span className="fw-bold">Accesibilidad</span>
+                      </div>
+                      <div className="d-flex flex-column gap-2">
+                        <Button 
+                          variant={animationsEnabled ? 'outline-secondary' : 'primary'} 
+                          size="sm" 
+                          onClick={() => {
+                            toggleAnimations();
+                            setShowThemeMenu(false);
+                          }}
+                          aria-pressed={!animationsEnabled}
+                        >
+                          <FaCog className="me-1" /> 
+                          {animationsEnabled ? 'Reducir animaciones' : 'Restaurar animaciones'}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <span className="fw-bold">Tamaño de texto</span>
-                    </div>
-                    <div className="theme-options d-flex gap-2">
+                    
+                    <div className="d-flex justify-content-end mt-3">
                       <Button 
-                        variant={fontSize === 'small' ? 'primary' : 'outline-secondary'} 
+                        variant="secondary" 
                         size="sm" 
-                        onClick={() => handleFontSizeChange('small')}
-                        aria-pressed={fontSize === 'small'}
+                        onClick={() => setShowThemeMenu(false)}
                       >
-                        <FaFont size={12} className="me-1" /> Pequeño
-                      </Button>
-                      <Button 
-                        variant={fontSize === 'medium' ? 'primary' : 'outline-secondary'} 
-                        size="sm" 
-                        onClick={() => handleFontSizeChange('medium')}
-                        aria-pressed={fontSize === 'medium'}
-                      >
-                        <FaFont size={14} className="me-1" /> Mediano
-                      </Button>
-                      <Button 
-                        variant={fontSize === 'large' ? 'primary' : 'outline-secondary'} 
-                        size="sm" 
-                        onClick={() => handleFontSizeChange('large')}
-                        aria-pressed={fontSize === 'large'}
-                      >
-                        <FaFont size={16} className="me-1" /> Grande
+                        Cerrar
                       </Button>
                     </div>
                   </div>
-                  
-                  <div className="accessibility-options">
-                    <div className="d-flex justify-content-between align-items-center mb-2">
-                      <span className="fw-bold">Accesibilidad</span>
-                    </div>
-                    <div className="d-flex flex-column gap-2">
-                      <Button 
-                        variant={highContrastMode ? 'primary' : 'outline-secondary'} 
-                        size="sm" 
-                        onClick={() => {
-                          toggleHighContrast();
-                          setShowThemeMenu(false);
-                        }}
-                        aria-pressed={highContrastMode}
-                      >
-                        <FaAdjust className="me-1" /> 
-                        {highContrastMode ? 'Desactivar alto contraste' : 'Activar alto contraste'}
-                      </Button>
-                      
-                      <Button 
-                        variant={animationsEnabled ? 'outline-secondary' : 'primary'} 
-                        size="sm" 
-                        onClick={() => {
-                          toggleAnimations();
-                          setShowThemeMenu(false);
-                        }}
-                        aria-pressed={!animationsEnabled}
-                      >
-                        <FaAccessibleIcon className="me-1" /> 
-                        {animationsEnabled ? 'Reducir animaciones' : 'Restaurar animaciones'}
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="d-flex justify-content-end mt-3">
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      onClick={() => setShowThemeMenu(false)}
-                    >
-                      Cerrar
-                    </Button>
-                  </div>
-                </div>
-              )}
+                )}
             </div>
             
             <div className="nav-wallet-wrapper">

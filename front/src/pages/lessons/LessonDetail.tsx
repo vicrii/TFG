@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Spinner, Alert, Tab, Tabs } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Spinner, Alert, Tab, Tabs, Modal } from 'react-bootstrap';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { lessonService } from '../../services/lesson/lessonService';
@@ -7,7 +7,7 @@ import { courseService } from '../../services/course/courseService';
 import { enrollmentService } from '../../services/enrollment/enrollmentService';
 import LessonContent from '../../components/lesson/LessonContent';
 import LessonQuiz from '../../components/lesson/LessonQuiz';
-import { FaArrowLeft, FaArrowRight, FaBook, FaCheck, FaLock } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaBook, FaCheck, FaLock, FaExclamationTriangle } from 'react-icons/fa';
 
 const LessonDetail: React.FC = () => {
   const { courseId, lessonNumber } = useParams<{ courseId: string, lessonNumber: string }>();
@@ -23,6 +23,10 @@ const LessonDetail: React.FC = () => {
   const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
   const [checkingEnrollment, setCheckingEnrollment] = useState<boolean>(true);
   
+  // Estados para modal de advertencia
+  const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
+  const [warningMessage, setWarningMessage] = useState<string>('');
+
   useEffect(() => {
     console.log('Effect triggered with:', { user, authLoading, courseId, lessonNumber });
     
@@ -70,49 +74,19 @@ const LessonDetail: React.FC = () => {
           previousCompleted: prevLesson?.isCompleted
         });
         
-        alert('Debes completar la lección anterior para acceder a esta.');
+        setWarningMessage('Debes completar la lección anterior para acceder a esta.');
+        setShowWarningModal(true);
         navigate(`/course/${courseId}/lesson/${currentIdx}`, { replace: true });
         return;
       }
     }
   }, [allLessons, lessonNumber, courseId, navigate]);
-  
-  // Función para verificar inscripción y cargar lección
-  const checkEnrollmentAndLoad = async () => {
-    if (!user?.walletAddress || !courseId) {
-      setError('Faltan datos necesarios');
-      setLoading(false);
-      setCheckingEnrollment(false);
-      return;
-    }
 
-    try {
-      setCheckingEnrollment(true);
-      console.log('Checking enrollment for course:', courseId);
-      
-      // Verificar si el usuario está inscrito
-      const enrollmentStatus = await enrollmentService.checkEnrollmentStatus(courseId);
-      setIsEnrolled(enrollmentStatus.isEnrolled);
-      
-      if (!enrollmentStatus.isEnrolled) {
-        console.log('User not enrolled in course');
-        setError('No estás inscrito en este curso');
-        setLoading(false);
-        setCheckingEnrollment(false);
-        return;
-      }
-      
-      // Si está inscrito, cargar la lección
-      await fetchLessonAndCourse();
-    } catch (error) {
-      console.error('Error checking enrollment:', error);
-      setError('Error al verificar la inscripción');
-      setLoading(false);
-    } finally {
-      setCheckingEnrollment(false);
-    }
+  const showAccessWarning = (message: string) => {
+    setWarningMessage(message);
+    setShowWarningModal(true);
   };
-  
+
   const fetchLessonAndCourse = async () => {
     if (!user?.walletAddress || !courseId || !lessonNumber) {
       setError('Faltan datos necesarios para cargar la lección');
@@ -153,6 +127,41 @@ const LessonDetail: React.FC = () => {
       console.error('Error in fetchLessonAndCourse:', error);
       setError(error instanceof Error ? error.message : 'Error al cargar la lección');
       setLoading(false);
+    }
+  };
+  
+  const checkEnrollmentAndLoad = async () => {
+    if (!user?.walletAddress || !courseId) {
+      setError('Faltan datos necesarios');
+      setLoading(false);
+      setCheckingEnrollment(false);
+      return;
+    }
+
+    try {
+      setCheckingEnrollment(true);
+      console.log('Checking enrollment for course:', courseId);
+      
+      // Verificar si el usuario está inscrito
+      const enrollmentStatus = await enrollmentService.checkEnrollmentStatus(courseId);
+      setIsEnrolled(enrollmentStatus.isEnrolled);
+      
+      if (!enrollmentStatus.isEnrolled) {
+        console.log('User not enrolled in course');
+        setError('No estás inscrito en este curso');
+        setLoading(false);
+        setCheckingEnrollment(false);
+        return;
+      }
+      
+      // Si está inscrito, cargar la lección
+      await fetchLessonAndCourse();
+    } catch (error) {
+      console.error('Error checking enrollment:', error);
+      setError('Error al verificar la inscripción');
+      setLoading(false);
+    } finally {
+      setCheckingEnrollment(false);
     }
   };
   
@@ -332,7 +341,7 @@ const LessonDetail: React.FC = () => {
                         if (canAccess) {
                           navigate(`/course/${courseId}/lesson/${index + 1}`);
                         } else {
-                          alert('Debes completar la lección anterior para acceder a esta.');
+                          showAccessWarning('Debes completar la lección anterior para acceder a esta.');
                         }
                       }}
                       disabled={!canAccess}
@@ -429,7 +438,7 @@ const LessonDetail: React.FC = () => {
                   const canAccessQuiz = currentIndex === 0 || allLessons[currentIndex - 1]?.isCompleted;
                   
                   if (k === 'quiz' && !canAccessQuiz) {
-                    alert('Debes completar la lección anterior para acceder a este quiz.');
+                    showAccessWarning('Debes completar la lección anterior para acceder a este quiz.');
                     return;
                   }
                   setActiveTab(k!);
@@ -446,7 +455,19 @@ const LessonDetail: React.FC = () => {
                 {(lesson.quizQuestions && lesson.quizQuestions.length > 0) || (lesson.codeExercises && lesson.codeExercises.length > 0) ? (
                   <Tab
                     eventKey="quiz"
-                    title={`Quiz & Ejercicios${lesson.quizQuestions ? ` (${lesson.quizQuestions.length})` : ''}${lesson.codeExercises ? ` + ${lesson.codeExercises.length} ejercicios` : ''}`}
+                    title={(() => {
+                      const hasQuiz = lesson.quizQuestions && lesson.quizQuestions.length > 0;
+                      const hasCodeExercises = lesson.codeExercises && lesson.codeExercises.length > 0;
+                      
+                      if (hasQuiz && hasCodeExercises) {
+                        return `Quiz & Ejercicios (${lesson.quizQuestions.length}) + ${lesson.codeExercises.length} ejercicios`;
+                      } else if (hasQuiz) {
+                        return `Quiz (${lesson.quizQuestions.length})`;
+                      } else if (hasCodeExercises) {
+                        return `Ejercicios (${lesson.codeExercises.length})`;
+                      }
+                      return 'Quiz & Ejercicios';
+                    })()}
                     disabled={currentIndex > 0 && !allLessons[currentIndex - 1]?.isCompleted}
                   >
                     <LessonQuiz lessonId={lesson._id} courseId={courseId || ''} onCompleted={refreshLessons} />
@@ -457,6 +478,27 @@ const LessonDetail: React.FC = () => {
           </Card>
         </Col>
       </Row>
+
+      {/* Modal de advertencia de acceso */}
+      <Modal show={showWarningModal} onHide={() => setShowWarningModal(false)} centered>
+        <Modal.Header closeButton className="bg-warning text-dark">
+          <Modal.Title>
+            <FaExclamationTriangle className="me-2" />
+            Acceso restringido
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="text-center mb-3">
+            <FaLock size={48} className="text-warning mb-3" />
+            <p className="mb-0">{warningMessage}</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="warning" onClick={() => setShowWarningModal(false)}>
+            Entendido
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
       <style>{`
         .lesson-detail {

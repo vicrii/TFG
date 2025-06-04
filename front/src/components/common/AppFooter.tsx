@@ -7,7 +7,7 @@ const AppFooter: React.FC<AppFooterProps> = ({ className }) => {
     <footer className={`py-3 bg-light ${className || ''}`}>
       <Container>
         <p className="text-center mb-0">
-          © {new Date().getFullYear()} Tu Plataforma de Aprendizaje. Todos los derechos reservados.
+          © {new Date().getFullYear()} Solana Learn. Todos los derechos reservados.
         </p>
       </Container>
     </footer>

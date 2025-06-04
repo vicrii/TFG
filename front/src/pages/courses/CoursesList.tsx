@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Table, Badge } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { getAllCoursesForModerator, toggleCoursePublishStatus, updateCourse } from '../../services/course/courseService';
+import { getAllCoursesForModerator, toggleCoursePublishStatus, updateCourse, deleteCourse } from '../../services/course/courseService';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { FaEdit, FaSave, FaTimes, FaBook, FaSearch, FaGraduationCap, FaTags, FaExclamationTriangle, FaDollarSign, FaToggleOn, FaPlus } from 'react-icons/fa';
+import { FaEdit, FaSave, FaTimes, FaBook, FaSearch, FaGraduationCap, FaTags, FaExclamationTriangle, FaDollarSign, FaToggleOn, FaPlus, FaTrash } from 'react-icons/fa';
 import { Modal } from 'react-bootstrap';
 
 // Tipo para los datos editables del curso
@@ -35,6 +35,7 @@ const CoursesList: React.FC = () => {
     category: 'all',
   });
   const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   
   // Estado para el modal de edición
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
@@ -53,6 +54,10 @@ const CoursesList: React.FC = () => {
   const [editError, setEditError] = useState<string | null>(null);
   const [editSuccess, setEditSuccess] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  
+  // Estado para el modal de confirmación de eliminación
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [courseToDelete, setCourseToDelete] = useState<any | null>(null);
   
   useEffect(() => {
     let isComponentMounted = true;
@@ -134,6 +139,35 @@ const CoursesList: React.FC = () => {
     } finally {
       setPublishingId(null);
     }
+  };
+
+  const handleDelete = (course: any) => {
+    setCourseToDelete(course);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!courseToDelete) return;
+    
+    setDeletingId(courseToDelete._id);
+    setError(null);
+    setShowDeleteModal(false);
+    
+    try {
+      await deleteCourse(courseToDelete._id, walletAddress || '');
+      // Remover el curso del estado local
+      setCourses(courses.filter(course => course._id !== courseToDelete._id));
+    } catch (error) {
+      setError('Error al eliminar el curso.');
+    } finally {
+      setDeletingId(null);
+      setCourseToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setCourseToDelete(null);
   };
 
   // Funciones para manejar el modal de edición
@@ -262,9 +296,9 @@ const CoursesList: React.FC = () => {
                    style={{ background: 'linear-gradient(45deg, #11998e, #38ef7d)' }}>
           <h2 className="mb-0">
             <FaBook className="me-2" color="black" />
-            Explore Courses
+            Explorar Cursos 
           </h2>
-          <p className="mb-0 mt-2 opacity-75" style={{ color: 'black' }}>View and manage all users in the platform. You can update roles and view user details.</p>
+          <p className="mb-0 mt-2 opacity-75" style={{ color: 'black' }}>Ver y administrar todos los cursos de la plataforma. Puedes editar, publicar y eliminar cursos.</p>
         </Card.Header>
         <Card.Body className="p-4">
           {!walletConnected ? (
@@ -513,6 +547,20 @@ const CoursesList: React.FC = () => {
                                       <FaToggleOn />
                                     )}
                                   </Button>
+                                  <Button 
+                                    variant="outline-danger" 
+                                    size="sm"
+                                    onClick={() => handleDelete(course)}
+                                    disabled={deletingId === course._id}
+                                    className="rounded-3"
+                                    title="Eliminar curso"
+                                  >
+                                    {deletingId === course._id ? (
+                                      <Spinner animation="border" size="sm" />
+                                    ) : (
+                                      <FaTrash />
+                                    )}
+                                  </Button>
                                 </div>
                               </td>
                             </tr>
@@ -690,6 +738,73 @@ const CoursesList: React.FC = () => {
             </Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      {/* Modal de confirmación de eliminación */}
+      <Modal show={showDeleteModal} onHide={handleCancelDelete} centered>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title className="d-flex align-items-center">
+            <FaExclamationTriangle className="me-2" />
+            Confirmar Eliminación
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center py-4">
+          {courseToDelete && (
+            <>
+              <div className="mb-4">
+                <div 
+                  className="rounded mx-auto mb-3 d-flex align-items-center justify-content-center"
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    background: courseToDelete.imageUrl 
+                      ? `url(${courseToDelete.imageUrl}) center/cover` 
+                      : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  }}
+                >
+                  {!courseToDelete.imageUrl && (
+                    <FaBook className="text-white" size={30} />
+                  )}
+                </div>
+                <h5 className="text-dark mb-2">{courseToDelete.title}</h5>
+                <p className="text-muted small mb-0">{courseToDelete.description}</p>
+              </div>
+              
+              <Alert variant="warning" className="border-0">
+                <div className="d-flex align-items-center">
+                  <FaExclamationTriangle className="me-2 text-warning" />
+                  <div className="text-start">
+                    <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+                    <br />
+                    <small>Se eliminarán todas las lecciones y contenido asociado.</small>
+                  </div>
+                </div>
+              </Alert>
+              
+              <p className="text-muted mb-0">
+                ¿Estás seguro de que quieres eliminar el curso <strong>"{courseToDelete.title}"</strong>?
+              </p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer className="justify-content-center">
+          <Button 
+            variant="outline-secondary" 
+            onClick={handleCancelDelete}
+            className="rounded-3 px-4"
+          >
+            <FaTimes className="me-2" />
+            Cancelar
+          </Button>
+          <Button 
+            variant="danger" 
+            onClick={handleConfirmDelete}
+            className="rounded-3 px-4"
+          >
+            <FaTrash className="me-2" />
+            Eliminar Curso
+          </Button>
+        </Modal.Footer>
       </Modal>
     </Container>
   );

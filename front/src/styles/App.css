@@ -459,7 +459,6 @@ body {
   --hero-bg-gradient: linear-gradient(to right, #f8f9fa, #e9ecef); 
   --hero-text-color: var(--text-color);
 
-
   --bs-body-bg: var(--bg-color);
   --bs-body-color: var(--text-color);
   --bs-secondary-bg: var(--secondary-bg-color);
@@ -472,30 +471,7 @@ body {
 }
 
 
-[data-bs-theme="dark"] {
-  --bg-color: #1a1a1a;
-  --text-muted-color: #adb5bd;
-  --text-subtle-color: #888; 
-  --secondary-bg-color: #2c2c2c;
-  --item-bg-color: #252525; 
-  --card-bg: #212121; 
-  --code-bg: #343a40;
-  --border-color: #495057;
-  --border-color-transparent: rgba(255, 255, 255, 0.1); 
-  --link-color: #6ea8fe;
-
-  --accent-color-primary: #a972ff; 
-  --accent-color-primary-darker: #9945FF; 
-  --accent-color-primary-bg-transparent: rgba(169, 114, 255, 0.15);
-
-
-  --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
-  --card-shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
-
-  --hero-bg-gradient: linear-gradient(to right, #000000, #1a1a2e); 
-  --hero-text-color: #ffffff;
-}
-
+/* Modos de tema - Solo modo claro */
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -688,43 +664,8 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-}
-
-[data-bs-theme="light"] .navbar-custom.scrolled {
   background-color: rgba(255, 255, 255, 0.95) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-[data-bs-theme="dark"] .navbar-custom.scrolled {
-  background-color: rgba(25, 25, 25, 0.95) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.theme-toggle-btn {
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  padding: 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.theme-toggle-btn:hover {
-  transform: rotate(30deg);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-[data-bs-theme="dark"] .theme-toggle-btn {
-  color: #ffd700;
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-[data-bs-theme="light"] .theme-toggle-btn {
-  color: #495057;
-  border-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Enhanced animations for nav items */
@@ -927,55 +868,6 @@ body {
   transform: translateY(1px);
 }
 
-/* Modos de tema */
-[data-bs-theme="light"] {
-  --bg-color: #f8f9fa;
-  --text-color: #212529;
-  --text-muted-color: #6c757d;
-  --text-subtle-color: #495057;
-  --secondary-bg-color: #e9ecef;
-  --item-bg-color: #ffffff;
-  --card-bg: #ffffff;
-  --code-bg: #f8f9fa;
-  --border-color: #dee2e6;
-  --border-color-transparent: rgba(0, 0, 0, 0.1);
-  --link-color: #0d6efd;
-
-  --accent-color-primary: #9945FF;
-  --accent-color-primary-darker: #8530ea;
-  --accent-color-primary-bg-transparent: rgba(153, 69, 255, 0.08);
-
-  --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  --card-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
-
-  --hero-bg-gradient: linear-gradient(to right, #9945FF, #14F195);
-  --hero-text-color: #ffffff;
-}
-
-[data-bs-theme="dark"] {
-  --bg-color: #1a1a1a;
-  --text-color: #f8f9fa;
-  --text-muted-color: #adb5bd;
-  --text-subtle-color: #888; 
-  --secondary-bg-color: #2c2c2c;
-  --item-bg-color: #252525; 
-  --card-bg: #212121; 
-  --code-bg: #343a40;
-  --border-color: #495057;
-  --border-color-transparent: rgba(255, 255, 255, 0.1); 
-  --link-color: #6ea8fe;
-
-  --accent-color-primary: #a972ff; 
-  --accent-color-primary-darker: #9945FF; 
-  --accent-color-primary-bg-transparent: rgba(169, 114, 255, 0.15);
-
-  --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  --card-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.3);
-
-  --hero-bg-gradient: linear-gradient(to right, #000000, #1a1a2e); 
-  --hero-text-color: #ffffff;
-}
-
 /* Tamaños de fuente para preferencias de usuario */
 .font-size-small {
   font-size: 0.875rem;
@@ -1070,7 +962,7 @@ body {
   --base-font-size: 1rem;
 }
 
-/* Menú de temas y accesibilidad */
+/* Menú de configuración */
 .theme-dropdown-menu {
   position: absolute;
   right: 0;
@@ -1081,74 +973,8 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   backdrop-filter: blur(10px);
-}
-
-[data-bs-theme="dark"] .theme-dropdown-menu {
-  background-color: rgba(33, 37, 41, 0.95);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-[data-bs-theme="light"] .theme-dropdown-menu {
   background-color: rgba(255, 255, 255, 0.95);
   border-color: rgba(0, 0, 0, 0.1);
-}
-
-.theme-options {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-/* Estilos para modo de alto contraste */
-.high-contrast {
-  --text-contrast-ratio: 10;
-}
-
-/* Modo alto contraste claro */
-[data-bs-theme="light"].high-contrast {
-  --bs-body-bg: #ffffff;
-  --bs-body-color: #000000;
-  --bs-link-color: #0000ee;
-  --bs-link-hover-color: #551a8b;
-  --bs-border-color: #000000;
-  --bs-navbar-color: #000000;
-  --bs-card-bg: #ffffff;
-  --bs-card-color: #000000;
-  --bs-list-group-bg: #ffffff;
-  --bs-list-group-color: #000000;
-}
-
-/* Modo alto contraste oscuro */
-[data-bs-theme="dark"].high-contrast {
-  --bs-body-bg: #000000;
-  --bs-body-color: #ffffff;
-  --bs-link-color: #00ccff;
-  --bs-link-hover-color: #ffcc00;
-  --bs-border-color: #ffffff;
-  --bs-navbar-color: #ffffff;
-  --bs-card-bg: #000000;
-  --bs-card-color: #ffffff;
-  --bs-list-group-bg: #000000;
-  --bs-list-group-color: #ffffff;
-}
-
-.high-contrast .btn-outline-light,
-.high-contrast .btn-outline-dark {
-  border-width: 2px;
-}
-
-.high-contrast .navbar-brand,
-.high-contrast .nav-link,
-.high-contrast h1, 
-.high-contrast h2, 
-.high-contrast h3 {
-  text-shadow: none;
-}
-
-.high-contrast .form-control:focus,
-.high-contrast .btn:focus,
-.high-contrast a:focus {
-  outline: 3px solid #ffcc00;
-  outline-offset: 2px;
 }
 
 /* Desactivar animaciones para accesibilidad */
@@ -1181,10 +1007,6 @@ html, body {
   outline-offset: 2px;
 }
 
-.high-contrast :focus {
-  outline: 3px solid #ffcc00;
-}
-
 /* Skip to main content - Accesibilidad para usuarios de lectores de pantalla */
 .skip-to-content {
   position: absolute;
@@ -1201,16 +1023,6 @@ html, body {
 
 .skip-to-content:focus {
   top: 0;
-}
-
-/* Mejorar la visibilidad de los elementos enfocados en alto contraste */
-.high-contrast button:focus,
-.high-contrast a:focus,
-.high-contrast input:focus,
-.high-contrast select:focus,
-.high-contrast textarea:focus {
-  outline: 3px solid #ffcc00;
-  outline-offset: 2px;
 }
 
 /* --- MEJORA DE FILTROS Y DROPDOWNS EN LA BARRA DE CURSOS --- */
@@ -1505,6 +1317,25 @@ html, body {
 
 .min-vh-50 {
   min-height: 50vh;
+}
+
+/* Ocultar botón "Change wallet" del WalletMultiButton */
+.wallet-adapter-dropdown-list-item[data-testid="wallet-adapter-dropdown-list-change-button"] {
+  display: none !important;
+}
+
+.wallet-adapter-dropdown-list-item:has(> .wallet-adapter-dropdown-list-change-button) {
+  display: none !important;
+}
+
+/* Alternativa más general para ocultar el botón Change wallet */
+.wallet-adapter-dropdown-list-item:nth-last-child(2) {
+  display: none !important;
+}
+
+/* Ocultar separador si queda huérfano */
+.wallet-adapter-dropdown-list-separator + .wallet-adapter-dropdown-list-separator {
+  display: none !important;
 }
 
 /* --- Fin utilidades tarjetas --- */

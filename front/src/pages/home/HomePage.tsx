@@ -5,7 +5,6 @@ import { FaGraduationCap, FaRocket, FaCoins, FaArrowRight, FaUsers, FaChartLine,
 import { courseService, ICourseData } from '../../services/course/courseService';
 import { analyticsService } from '../../services/analytics/analyticsService';
 import { useAuth } from '../../hooks/useAuth';
-import WalletDiagnostics from '../../components/common/WalletDiagnostics';
 
 // Interfaz para las estadísticas de la plataforma
 interface PlatformStats {
@@ -636,8 +635,6 @@ function HomePage() {
           </Row>
         </Container>
       </div>
-
-      <WalletDiagnostics />
     </Container>
   );
 }

@@ -42,6 +42,10 @@ const UsersList: React.FC = () => {
   const [showDetailsModal, setShowDetailsModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   
+  // Estado para modal de error
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [errorModalMessage, setErrorModalMessage] = useState<string>('');
+  
   useEffect(() => {
     if (user?.walletAddress && user?.role === 'moderator') {
       fetchUsers();
@@ -81,7 +85,8 @@ const UsersList: React.FC = () => {
       
     } catch (err: any) {
       console.error('Error updating user role:', err);
-      alert(`Error updating role: ${err.message}`);
+      setErrorModalMessage(`No se pudo actualizar el rol del usuario: ${err.message}`);
+      setShowErrorModal(true);
     }
   };
   
@@ -249,10 +254,10 @@ const UsersList: React.FC = () => {
         <Card.Header className="bg-gradient text-white text-center py-3" 
                    style={{ background: 'linear-gradient(45deg, #667eea, #764ba2)' }}>
           <h2 className="mb-0" style={{ color: 'black' }}>
-            <FaUsers className="me-2" color="black"/>
-            Users Management
+            <FaUsers className="me-2" style={{ color: 'black' }}/>
+            Gestión de Usuarios
           </h2>
-          <p className="mb-0 mt-2 opacity-75" style={{ color: 'black' }}>View and manage all users in the platform. You can update roles and view user details.</p>
+          <p className="mb-0 mt-2 opacity-75" style={{ color: 'black' }}>Ver y administrar todos los usuarios de la plataforma. Puedes actualizar roles y ver detalles de usuarios.</p>
         </Card.Header>
         <Card.Body className="p-4">
           {/* Filtros modernos */}
@@ -623,6 +628,24 @@ const UsersList: React.FC = () => {
           }}>
             <FaEdit className="me-2" />
             Editar Usuario
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de error */}
+      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)} centered>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title>
+            <FaExclamationTriangle className="me-2" />
+            Error al actualizar rol
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-0">{errorModalMessage}</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={() => setShowErrorModal(false)}>
+            Entendido
           </Button>
         </Modal.Footer>
       </Modal>

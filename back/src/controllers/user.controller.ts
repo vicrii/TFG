@@ -43,6 +43,35 @@ export class UserController {
   }
 
   /**
+   * Get user by wallet address
+   */
+  async getUserByWallet(req: Request, res: Response): Promise<void> {
+    try {
+      const { walletAddress } = req.params;
+      
+      if (!walletAddress) {
+        res.status(400).json({ message: 'Wallet address is required' });
+        return;
+      }
+      
+      const user = await userService.getUserByWallet(walletAddress);
+      
+      if (!user) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+      
+      res.json(user);
+    } catch (error) {
+      console.error('Error in getUserByWallet controller:', error);
+      res.status(500).json({ 
+        message: 'Error fetching user by wallet',
+        error: (error as Error).message 
+      });
+    }
+  }
+
+  /**
    * Update a user's profile
    */
   async updateUser(req: Request, res: Response): Promise<void> {
@@ -68,6 +97,41 @@ export class UserController {
       console.error('Error in updateUser controller:', error);
       res.status(500).json({ 
         message: 'Error updating user',
+        error: (error as Error).message 
+      });
+    }
+  }
+
+  /**
+   * Update user avatar
+   */
+  async updateUserAvatar(req: Request, res: Response): Promise<void> {
+    try {
+      const { walletAddress } = req.params;
+      const { avatarUrl } = req.body;
+      
+      if (!walletAddress) {
+        res.status(400).json({ message: 'Wallet address is required' });
+        return;
+      }
+      
+      if (!avatarUrl) {
+        res.status(400).json({ message: 'Avatar URL is required' });
+        return;
+      }
+      
+      const updatedUser = await userService.updateUserAvatar(walletAddress, avatarUrl);
+      
+      if (!updatedUser) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error in updateUserAvatar controller:', error);
+      res.status(500).json({ 
+        message: 'Error updating user avatar',
         error: (error as Error).message 
       });
     }

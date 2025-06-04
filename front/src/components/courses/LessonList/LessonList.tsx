@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Card, Button, Alert, ProgressBar, ListGroup, Modal } from 'react-bootstrap';
 import { Card, Button, Alert, ProgressBar, ListGroup } from 'react-bootstrap';
 import { FaPlus, FaLock, FaSignInAlt, FaEye } from 'react-icons/fa';
 import { Lesson } from '../../../types/lesson';

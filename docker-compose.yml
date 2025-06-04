@@ -1,21 +1,72 @@
 services:
-  # Aplicación Solana Learning (Backend + Frontend)
-  app:
-    build: .
-    ports:
-      - "5000:5000"
-    environment:
-      - NODE_ENV=production
-      - PORT=5000
-      - MONGODB_URI=mongodb+srv://vicridev:OvDwlhYiLfdOdhSS@db.e0byx.mongodb.net/?retryWrites=true&w=majority
-      - FRONTEND_URL=https://3.89.10.184
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: solana-learning-mongodb
     restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: solana_learning
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongodb-init:/docker-entrypoint-initdb.d:ro
     networks:
       - solana-network
 
-  # Nginx con SSL
+  # Backend API
+  backend:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: solana-learning-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/solana_learning?authSource=admin
+      - JWT_SECRET=your-jwt-secret-key-here
+      - UPLOAD_DIR=/app/uploads
+    volumes:
+      - ./back:/app
+      - backend_uploads:/app/uploads
+      - /app/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - solana-network
+    command: npm run dev
+
+  # Frontend
+  frontend:
+    build: 
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: solana-learning-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:5000
+      - VITE_APP_ENV=development
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - solana-network
+    command: npm run dev
+
+  # Nginx (opcional para producción)
   nginx:
     image: nginx:alpine
+    container_name: solana-learning-nginx
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -23,14 +74,16 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ssl_certs:/etc/ssl/certs
       - ssl_private:/etc/ssl/private
+      - backend_uploads:/var/www/uploads:ro
     depends_on:
-      - app
-      - ssl-generator
-    restart: unless-stopped
+      - frontend
+      - backend
     networks:
       - solana-network
+    profiles:
+      - production
 
-  # Generador de certificados SSL
+  # Generador de certificados SSL (solo para producción)
   ssl-generator:
     image: alpine:latest
     volumes:
@@ -44,7 +97,7 @@ services:
           openssl req -x509 -nodes -days 365 -newkey rsa:2048 
             -keyout /etc/ssl/private/nginx-selfsigned.key 
             -out /etc/ssl/certs/nginx-selfsigned.crt 
-            -subj '/C=US/ST=VA/L=Ashburn/O=SolanaLearn/CN=3.89.10.184' &&
+            -subj '/C=US/ST=VA/L=Ashburn/O=SolanaLearn/CN=localhost' &&
           chmod 600 /etc/ssl/private/nginx-selfsigned.key &&
           chmod 644 /etc/ssl/certs/nginx-selfsigned.crt &&
           echo 'SSL certificates generated successfully'
@@ -52,11 +105,18 @@ services:
           echo 'SSL certificates already exist'
         fi
       "
+    profiles:
+      - production
 
 volumes:
-  app_data:
+  mongodb_data:
+    driver: local
+  backend_uploads:
+    driver: local
   ssl_certs:
+    driver: local  
   ssl_private:
+    driver: local
 
 networks:
   solana-network:

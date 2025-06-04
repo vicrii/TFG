@@ -40,6 +40,8 @@ export interface AppNavbarProps {
   highContrastMode?: boolean;
   fontSize?: 'small' | 'medium' | 'large';
   animationsEnabled?: boolean;
+  user?: any;
+  connected?: boolean;
 }
 
 export interface AppFooterProps {

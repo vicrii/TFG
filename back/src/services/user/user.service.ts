@@ -11,6 +11,7 @@ export interface IUserData {
   createdAt: string;
   updatedAt?: string;
   isActive: boolean;
+  avatarUrl?: string;
 }
 
 // Helper para convertir el documento de Mongoose a IUserData
@@ -25,7 +26,8 @@ const convertToIUserData = (doc: any): IUserData => {
     role: doc.role,
     createdAt: doc.createdAt.toISOString(),
     updatedAt: doc.updatedAt ? doc.updatedAt.toISOString() : undefined,
-    isActive: doc.isActive
+    isActive: doc.isActive,
+    avatarUrl: doc.avatarUrl
   };
 };
 
@@ -57,6 +59,19 @@ export class UserService {
   }
 
   /**
+   * Get user by wallet address
+   */
+  async getUserByWallet(walletAddress: string): Promise<IUserData | null> {
+    try {
+      const user = await User.findOne({ walletAddress });
+      return user ? convertToIUserData(user) : null;
+    } catch (error) {
+      console.error('Error fetching user by wallet:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Update a user's profile
    */
   async updateUser(walletAddress: string, userData: Partial<IUserData>): Promise<IUserData | null> {
@@ -78,6 +93,28 @@ export class UserService {
       return convertToIUserData(updatedUser);
     } catch (error) {
       console.error('Error updating user:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update user avatar
+   */
+  async updateUserAvatar(walletAddress: string, avatarUrl: string): Promise<IUserData | null> {
+    try {
+      const user = await User.findOne({ walletAddress });
+      
+      if (!user) {
+        return null;
+      }
+      
+      user.avatarUrl = avatarUrl;
+      user.updatedAt = new Date();
+      
+      const updatedUser = await user.save();
+      return convertToIUserData(updatedUser);
+    } catch (error) {
+      console.error('Error updating user avatar:', error);
       throw error;
     }
   }

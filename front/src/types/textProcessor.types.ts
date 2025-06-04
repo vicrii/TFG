@@ -1,11 +1,11 @@
-export interface TranscriptionResult {
+export interface ProcessingResult {
   title: string;
   transcription: string;
   summary: string;
   lessons?: string[] | EnhancedLesson[];
   progress?: number;
   status?: string;
-  videoDuration?: number;
+  textLength?: number;
 }
 
 export interface QuizQuestion {

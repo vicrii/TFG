@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Container, Row, Col, Card, Spinner, Alert } from 'react-bootstrap';
-import { FaYoutube, FaPlus, FaChalkboardTeacher, FaChartBar, FaUsers, FaBook, FaClock, FaGraduationCap, FaTrophy } from 'react-icons/fa';
+import { FaYoutube, FaPlus, FaChalkboardTeacher, FaChartBar, FaUsers, FaBook, FaClock, FaGraduationCap, FaTrophy, FaFileAlt } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import {
@@ -235,19 +235,6 @@ const ModeratorDashboardPage: React.FC = () => {
                                         }}
                                     >
                                         <FaPlus className="me-2" /> Añadir Nuevo Curso
-                                    </Button>
-                                </Link>
-                                <Link to="/transcriber" className="text-decoration-none">
-                                    <Button 
-                                        size="lg" 
-                                        className="px-4 py-3 m-2 rounded-3 shadow-sm" 
-                                        style={{ 
-                                            background: 'linear-gradient(45deg, #11998e, #38ef7d)',
-                                            border: 'none',
-                                            minWidth: '200px'
-                                        }}
-                                    >
-                                        <FaYoutube className="me-2" /> Generar Curso con IA
                                     </Button>
                                 </Link>
                                 <Link to="/courses-list" className="text-decoration-none">

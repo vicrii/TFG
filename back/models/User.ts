@@ -27,6 +27,7 @@ export interface IUser extends Document {
   displayName: string;
   email: string;
   bio?: string;
+  avatarUrl?: string;
   role: 'student' | 'instructor' | 'admin' | 'moderator';
   settings?: UserSettings;
   createdAt: Date;
@@ -56,6 +57,10 @@ const UserSchema = new Schema<IUser>({
   bio: {
     type: String,
     maxlength: [500, 'La biografía no puede tener más de 500 caracteres']
+  },
+  avatarUrl: {
+    type: String,
+    trim: true
   },
   role: {
     type: String,

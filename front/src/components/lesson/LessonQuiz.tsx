@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Fragment } from 'react';
 import { Card, Button, Form, Alert, Tabs, Tab, Modal } from 'react-bootstrap';
 import { lessonService } from '../../services/lesson/lessonService';
 import { QuizQuestion, CodeExercise } from '../../services/lesson/lesson.api';
@@ -6,7 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import styles from './LessonQuiz.module.css';
 import CodeTest from '../interactive/CodeTest';
-import { FaCheck, FaArrowRight, FaTrophy } from 'react-icons/fa';
+import { FaCheck, FaArrowRight, FaTrophy, FaWallet } from 'react-icons/fa';
 
 interface LessonQuizProps {
   lessonId: string;
@@ -39,6 +39,9 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('quiz');
+
+  // Estados para modal de wallet
+  const [showWalletModal, setShowWalletModal] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchQuizAndCode = async () => {
@@ -100,7 +103,7 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
 
   const handleSubmit = useCallback(async () => {
     if (!user?.walletAddress) {
-      alert('Debes conectar tu wallet para completar el test.');
+      setShowWalletModal(true);
       return;
     }
     const correctAnswers = questions.filter((q, i) => q.correctAnswerIndex === answers[i]).length;
@@ -513,6 +516,28 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
               <FaArrowRight className="ms-2" />
             </Button>
           </div>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para requerir wallet */}
+      <Modal show={showWalletModal} onHide={() => setShowWalletModal(false)} centered>
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title>
+            <FaWallet className="me-2" />
+            Wallet requerida
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="text-center mb-3">
+            <FaWallet size={48} className="text-primary mb-3" />
+            <h5>Conecta tu wallet</h5>
+            <p className="mb-0">Debes conectar tu wallet para completar el test y guardar tu progreso.</p>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => setShowWalletModal(false)}>
+            Entendido
+          </Button>
         </Modal.Footer>
       </Modal>
     </>

@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import { Lesson, ILesson } from '../../../models/Lesson';
 import { LessonProgress as Progress } from '../../../models/LessonProgress';
+import { UserActivity } from '../../../models/UserActivity';
+import { Question } from '../../../models/Question';
 
 // Interface para la respuesta de lecciones
 export interface LessonData {
@@ -198,29 +200,55 @@ export class LessonService {
     courseId: string, 
     lessonData: Omit<LessonData, '_id' | 'course' | 'createdAt' | 'updatedAt' | 'isCompleted' | 'isLocked'>
   ): Promise<LessonData> {
+    console.log('🔍 SERVICE - createLesson called with:');
+    console.log('🔍 SERVICE - courseId:', courseId);
+    console.log('🔍 SERVICE - lessonData:', JSON.stringify(lessonData, null, 2));
+    console.log('🔍 SERVICE - lessonData.title:', lessonData.title);
+    console.log('🔍 SERVICE - lessonData.content:', lessonData.content);
+    console.log('🔍 SERVICE - typeof lessonData.title:', typeof lessonData.title);
+    console.log('🔍 SERVICE - typeof lessonData.content:', typeof lessonData.content);
+
+    const session = await mongoose.startSession();
+    
     try {
       if (!mongoose.Types.ObjectId.isValid(courseId)) {
         throw new Error('ID de curso inválido');
       }
 
-      // Determinar el orden más alto actual y asignar el siguiente
-      const highestOrderLesson = await Lesson.findOne({ course: courseId })
-        .sort({ order: -1 })
-        .limit(1);
+      let result: any;
       
-      const newOrder = highestOrderLesson ? highestOrderLesson.order + 1 : 0;
+      await session.withTransaction(async () => {
+        // Determinar el orden más alto actual dentro de la transacción
+        const highestOrderLesson = await Lesson.findOne({ course: courseId })
+          .sort({ order: -1 })
+          .limit(1)
+          .session(session);
+        
+        const newOrder = highestOrderLesson ? highestOrderLesson.order + 1 : 0;
+        console.log('🔍 SERVICE - Calculated newOrder:', newOrder);
 
-      // Crear la nueva lección
-      const newLesson = new Lesson({
-        ...lessonData,
-        course: courseId,
-        order: lessonData.order !== undefined ? lessonData.order : newOrder
+        // Crear la nueva lección usando el orden calculado
+        const newLessonData = {
+          ...lessonData,
+          course: courseId,
+          order: newOrder
+        };
+        
+        console.log('🔍 SERVICE - About to create lesson with data:', JSON.stringify(newLessonData, null, 2));
+        
+        const newLesson = new Lesson(newLessonData);
+        const savedLesson = await newLesson.save({ session });
+        result = savedLesson;
+        
+        console.log('✅ SERVICE - Lesson created successfully:', result._id);
       });
 
-      const savedLesson = await newLesson.save();
-      return convertToLessonData(savedLesson);
+      return convertToLessonData(result);
     } catch (error) {
+      console.error('❌ SERVICE - Error creating lesson:', error);
       throw error;
+    } finally {
+      await session.endSession();
     }
   }
 
@@ -263,14 +291,27 @@ export class LessonService {
         return false;
       }
 
-      // Eliminar la lección
+      console.log(`Deleting lesson ${lessonId} and all related data...`);
+
+      // 1. Eliminar actividades de usuario de la lección
+      const deletedActivities = await UserActivity.deleteMany({ lesson: lessonId });
+      console.log(`Deleted ${deletedActivities.deletedCount} user activities`);
+
+      // 2. Eliminar preguntas de la lección
+      const deletedQuestions = await Question.deleteMany({ lessonId: lessonId });
+      console.log(`Deleted ${deletedQuestions.deletedCount} questions`);
+
+      // 3. Eliminar registros de progreso asociados
+      const deletedProgress = await Progress.deleteMany({ lesson: lessonId });
+      console.log(`Deleted ${deletedProgress.deletedCount} lesson progress records`);
+
+      // 4. Finalmente, eliminar la lección
       const result = await Lesson.deleteOne({ _id: lessonId });
-      
-      // Eliminar registros de progreso asociados
-      await Progress.deleteMany({ lesson: lessonId });
+      console.log(`Lesson ${lessonId} deleted successfully`);
 
       return result.deletedCount === 1;
     } catch (error) {
+      console.error(`Error deleting lesson ${lessonId}:`, error);
       throw error;
     }
   }

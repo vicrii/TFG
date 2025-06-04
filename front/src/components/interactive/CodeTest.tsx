@@ -50,7 +50,6 @@ const CodeTest: React.FC<CodeTestProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [consoleOutput, setConsoleOutput] = useState<string[]>([]);
   const [showConsole, setShowConsole] = useState(false);
-  const { codeEditorTheme } = useUI();
 
   // Función para capturar console.log
   const captureConsole = () => {
@@ -194,7 +193,7 @@ const CodeTest: React.FC<CodeTestProps> = ({
           height="100%"
           language="javascript"
           value={code}
-          theme={codeEditorTheme}
+          theme="vs-dark"
           onChange={(value) => setCode(value || '')}
           options={editorOptions}
         />

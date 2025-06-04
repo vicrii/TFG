@@ -200,11 +200,49 @@ export class CourseService {
       // Comprobar si es el instructor o si es moderador
       // Esto requeriría verificación adicional de roles en un entorno real
       
-      // Eliminar el curso
+      // Importar modelos necesarios para borrado en cascada
+      const { Enrollment } = await import('../../../models/Enrollment');
+      const { Lesson } = await import('../../../models/Lesson');
+      const { LessonProgress } = await import('../../../models/LessonProgress');
+      const { UserActivity } = await import('../../../models/UserActivity');
+      const { Question } = await import('../../../models/Question');
+      
+      // Borrado en cascada - eliminar todos los datos relacionados
+      console.log(`Deleting course ${courseId} and all related data...`);
+      
+      // 1. Eliminar actividades de usuario del curso
+      const deletedActivities = await UserActivity.deleteMany({ course: courseId });
+      console.log(`Deleted ${deletedActivities.deletedCount} user activities`);
+      
+      // 2. Obtener todas las lecciones del curso para borrar questions
+      const courseLessons = await Lesson.find({ course: courseId }).select('_id');
+      const lessonIds = courseLessons.map(lesson => lesson._id);
+      
+      // 3. Eliminar preguntas de todas las lecciones del curso
+      let deletedQuestions = { deletedCount: 0 };
+      if (lessonIds.length > 0) {
+        deletedQuestions = await Question.deleteMany({ lessonId: { $in: lessonIds } });
+      }
+      console.log(`Deleted ${deletedQuestions.deletedCount} questions`);
+      
+      // 4. Eliminar todos los enrollments del curso
+      const deletedEnrollments = await Enrollment.deleteMany({ course: courseId });
+      console.log(`Deleted ${deletedEnrollments.deletedCount} enrollments`);
+      
+      // 5. Eliminar todo el progreso de lecciones del curso
+      const deletedProgress = await LessonProgress.deleteMany({ course: courseId });
+      console.log(`Deleted ${deletedProgress.deletedCount} lesson progress records`);
+      
+      // 6. Eliminar todas las lecciones del curso
+      const deletedLessons = await Lesson.deleteMany({ course: courseId });
+      console.log(`Deleted ${deletedLessons.deletedCount} lessons`);
+      
+      // 7. Finalmente, eliminar el curso
       await Course.deleteOne({ _id: courseId });
+      console.log(`Course ${courseId} deleted successfully`);
       
       return {
-        message: 'Curso eliminado exitosamente'
+        message: `Curso eliminado exitosamente junto con ${deletedEnrollments.deletedCount} inscripciones, ${deletedLessons.deletedCount} lecciones, ${deletedProgress.deletedCount} registros de progreso, ${deletedActivities.deletedCount} actividades de usuario y ${deletedQuestions.deletedCount} preguntas`
       };
     } catch (error) {
       console.error('Error deleting course:', error);

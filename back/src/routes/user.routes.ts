@@ -10,7 +10,9 @@ const router = Router();
 // Protected routes (require authentication)
 router.get('/users', authenticateUser, userController.getAllUsers);
 router.get('/users/:userId', authenticateUser, userController.getUserDetails);
+router.get('/users/wallet/:walletAddress', authenticateUser, userController.getUserByWallet);
 router.put('/users/:walletAddress', authenticateUser, userController.updateUser);
+router.patch('/users/:walletAddress/avatar', authenticateUser, userController.updateUserAvatar);
 router.patch('/users/:userId/role', authenticateUser, userController.updateUserRole);
 router.patch('/users/:userId/active', authenticateUser, userController.toggleUserActive);
 
@@ -27,4 +29,4 @@ router.get('/users/settings', (req, res) => {
   });
 });
 
-export default router; 
+export default router;

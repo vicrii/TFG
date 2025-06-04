@@ -52,9 +52,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos estáticos del frontend (usando process.cwd() en lugar de __dirname)
-app.use(express.static(path.join(process.cwd(), 'public')));
-
 // Middleware para logging mínimo
 app.use((req, res, next) => {
   // Solo mostrar logs esenciales
@@ -76,10 +73,16 @@ app.get('/api/health', (req, res) => {
 // Usar las nuevas rutas centralizadas
 app.use('/', apiRoutes);
 
-// Catch-all handler: sirve React para todas las rutas no API (DEBE IR AL FINAL)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
-});
+// Solo en producción: servir archivos estáticos del frontend y catch-all handler
+if (process.env.NODE_ENV === 'production') {
+  // Servir archivos estáticos del frontend
+  app.use(express.static(path.join(process.cwd(), 'public')));
+  
+  // Catch-all handler: sirve React para todas las rutas no API
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'public', 'index.html'));
+  });
+}
 
 // Middleware de manejo de errores simplificado
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

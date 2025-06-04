@@ -32,10 +32,8 @@ const CoursesPage = createLazyComponent(() => import('./pages/courses/CoursesPag
 const CourseDetail = createLazyComponent(() => import('./pages/courses/CourseDetail'));
 const LessonDetail = createLazyComponent(() => import('./pages/lessons/LessonDetail'));
 const ProfilePage = createLazyComponent(() => import('./pages/user/ProfilePage'));
-const UserSettingsPage = createLazyComponent(() => import('./pages/user/UserSettingsPage'));
 const MyCoursesPage = createLazyComponent(() => import('./pages/courses/MyCoursesPage'));
 const CreateCoursePage = createLazyComponent(() => import('./pages/courses/CreateCoursePage'));
-const TestEditor = createLazyComponent(() => import('./pages/tools/TestEditor'));
 const ModeratorDashboard = createLazyComponent(() => import('./pages/ModeratorDashboard'));
 const CoursesList = createLazyComponent(() => import('./pages/courses/CoursesList'));
 const UsersList = createLazyComponent(() => import('./pages/user/UsersList'));
@@ -54,9 +52,7 @@ const LoadingComponent = () => (
 const BACKEND_CHECK_INTERVAL = 30000; // 30 segundos
 
 // ProtectedRoute para moderadores/admin
-const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const { user, loading } = useAuth();
-  if (loading) return null;
+const ProtectedRoute = ({ children, user }: { children: ReactNode; user: any }) => {
   if (!user || (user.role !== 'moderator' && user.role !== 'admin')) {
     return <Navigate to="/login" replace />;
   }
@@ -64,7 +60,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
 };
 
 // Componente de rutas
-const AppRoutes = () => {
+const AppRoutes = ({ user }: { user: any }) => {
   return (
     <>
       <Routes>
@@ -92,11 +88,6 @@ const AppRoutes = () => {
             <ProfilePage />
           </Suspense>
         } />
-        <Route path="/settings" element={
-          <Suspense fallback={<LoadingComponent />}>
-            <UserSettingsPage />
-          </Suspense>
-        } />
         <Route path="/my-courses" element={
           <Suspense fallback={<LoadingComponent />}>
             <MyCoursesPage />
@@ -109,34 +100,24 @@ const AppRoutes = () => {
             <CreateCoursePage />
           </Suspense>
         } />
-        <Route path="/transcriber" element={
-          <Suspense fallback={<LoadingComponent />}>
-            <div>Funcionalidad de transcripción temporalmente deshabilitada</div>
-          </Suspense>
-        } />
-        <Route path="/test-editor" element={
-          <Suspense fallback={<LoadingComponent />}>
-            <TestEditor />
-          </Suspense>
-        } />
         
         {/* Rutas de moderadores protegidas */}
         <Route path="/moderator" element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <Suspense fallback={<LoadingComponent />}>
               <ModeratorDashboard />
             </Suspense>
           </ProtectedRoute>
         } />
         <Route path="/courses-list" element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <Suspense fallback={<LoadingComponent />}>
               <CoursesList />
             </Suspense>
           </ProtectedRoute>
         } />
         <Route path="/users-list" element={
-          <ProtectedRoute>
+          <ProtectedRoute user={user}>
             <Suspense fallback={<LoadingComponent />}>
               <UsersList />
             </Suspense>
@@ -156,21 +137,42 @@ const SkipToContent = () => (
   </a>
 );
 
-// Componente interno para manejar la autenticación
-function AppContent() {
+// Componente intermedio que maneja la autenticación y la pasa a UIProvider
+function AppWithAuth() {
+  const { showRegister, handleRegister, setShowRegister, user, checkUserForWallet } = useAuth();
+  
+  return (
+    <UIProvider user={user}>
+      <AppContent 
+        user={user}
+        showRegister={showRegister}
+        handleRegister={handleRegister}
+        setShowRegister={setShowRegister}
+        checkUserForWallet={checkUserForWallet}
+      />
+    </UIProvider>
+  );
+}
+
+// Componente interno para manejar la aplicación
+function AppContent({ 
+  user, 
+  showRegister, 
+  handleRegister, 
+  setShowRegister, 
+  checkUserForWallet 
+}: {
+  user: any;
+  showRegister: boolean;
+  handleRegister: any;
+  setShowRegister: any;
+  checkUserForWallet: any;
+}) {
   const wallet = useWallet();
   const { publicKey, connected } = wallet;
-  const { showRegister, handleRegister, setShowRegister, logout, user } = useAuth();
-  const { isDarkMode } = useUI();
   const [backendConnected, setBackendConnected] = useState<boolean | null>(null);
   const [isCheckingConnection, setIsCheckingConnection] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (user && !connected) {
-      logout();
-      window.location.reload();
-    }
-  }, [user, connected, logout]);
+  const [lastCheckedWallet, setLastCheckedWallet] = useState<string | null>(null);
 
   const checkBackendConnectionStatus = useCallback(async () => {
     try {
@@ -186,6 +188,53 @@ function AppContent() {
       setIsCheckingConnection(false);
     }
   }, []);
+
+  // Efecto para verificar usuario solo cuando se conecta una wallet nueva
+  useEffect(() => {
+    if (!connected || !publicKey) {
+      return;
+    }
+
+    const walletAddress = publicKey.toString();
+    
+    // Solo verificar si es una wallet diferente a la última verificada
+    // y si no tenemos un usuario para esta wallet
+    if (lastCheckedWallet === walletAddress || 
+        (user && user.walletAddress === walletAddress)) {
+      return;
+    }
+
+    // Verificar usuario para esta nueva wallet
+    checkUserForWallet(walletAddress);
+    setLastCheckedWallet(walletAddress);
+  }, [connected, publicKey?.toString(), user?.walletAddress, lastCheckedWallet, checkUserForWallet]);
+
+  // Efecto para reconectar la wallet automáticamente si hay usuario pero no conexión
+  useEffect(() => {
+    if (user && user.walletAddress && !connected && !publicKey) {
+      console.log('[AppContent] User exists but wallet not connected, attempting auto-reconnect...');
+      
+      // Intentar reconectar la wallet
+      const attemptReconnect = async () => {
+        try {
+          // Usar el WalletAdapter para intentar reconectar
+          const { connect } = wallet;
+          if (connect) {
+            await connect();
+            console.log('[AppContent] Wallet auto-reconnected successfully');
+          }
+        } catch (error) {
+          console.warn('[AppContent] Auto-reconnect failed (expected on first load):', error);
+          // No mostrar error ya que es normal que falle en algunos casos
+        }
+      };
+
+      // Delay pequeño para dar tiempo a que los adapters se inicialicen
+      const timeoutId = setTimeout(attemptReconnect, 1000);
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [user, connected, publicKey, wallet]);
 
   // Efecto para verificar la conexión con el backend
   useEffect(() => {
@@ -237,10 +286,10 @@ function AppContent() {
             </Button>
           </Alert>
         )}
-        <AppNavbar />
+        <AppNavbar user={user} connected={connected} />
         <main id="main-content" className="pt-2 flex-grow-1">
           <Container fluid className="p-1">
-            <AppRoutes />
+            <AppRoutes user={user} />
           </Container>
         </main>
         
@@ -329,12 +378,10 @@ function App() {
                 console.error('WalletProvider Error:', error);
                 // Mostrar el error para diagnosticar el problema
               }}
-              autoConnect={false}
+              autoConnect={true}
             >
               <WalletModalProvider>
-                <UIProvider>
-                  <AppContent />
-                </UIProvider>
+                <AppWithAuth />
               </WalletModalProvider>
             </WalletProvider>
           </WalletErrorBoundary>

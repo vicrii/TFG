@@ -72,6 +72,15 @@ export class LessonController {
       const lessonData = req.body;
       const walletAddress = req.headers['x-wallet-address'] as string;
       
+      // Debug logging para entender qué está llegando
+      console.log('🔍 CONTROLLER - courseId:', courseId);
+      console.log('🔍 CONTROLLER - walletAddress:', walletAddress);
+      console.log('🔍 CONTROLLER - req.body completo:', JSON.stringify(req.body, null, 2));
+      console.log('🔍 CONTROLLER - lessonData.title:', lessonData.title);
+      console.log('🔍 CONTROLLER - lessonData.content:', lessonData.content);
+      console.log('🔍 CONTROLLER - typeof lessonData.title:', typeof lessonData.title);
+      console.log('🔍 CONTROLLER - typeof lessonData.content:', typeof lessonData.content);
+      
       if (!walletAddress) {
         res.status(401).json({ message: 'No autorizado: Se requiere dirección de wallet' });
         return;
