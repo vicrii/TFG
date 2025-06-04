@@ -1,5 +1,3 @@
-// Aplicar configuraciones para evitar errores SSL
-// require('./fix-ssl-errors');
 
 import express from 'express';
 import cors from 'cors';

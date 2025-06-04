@@ -55,7 +55,6 @@ export const lessonApi = {
       if (walletAddress) {
         const options = apiClient.setAuthHeader(walletAddress);
         const response = await apiClient.get<Lesson[]>(`/lessons/by-course/${courseId}`, options);
-        console.log('Lessons with progress fetched:', response.map(l => ({ title: l.title, isCompleted: l.isCompleted })));
         return response;
       } else {
         // Para usuarios no autenticados, usar endpoint público
@@ -73,7 +72,6 @@ export const lessonApi = {
    */
   async getLessonById(lessonId: string, walletAddress?: string): Promise<Lesson> {
     try {
-      console.log(`Fetching lesson with ID: ${lessonId}`);
       const options = walletAddress ? apiClient.setAuthHeader(walletAddress) : {};
       
       // Make the API call
@@ -101,13 +99,6 @@ export const lessonApi = {
           response.content = '';
         }
       }
-      
-      console.log('Processed lesson response:', {
-        id: response._id,
-        title: response.title,
-        contentLength: response.content.length,
-        contentStart: response.content.substring(0, 50) + '...'
-      });
       
       return response;
     } catch (error) {

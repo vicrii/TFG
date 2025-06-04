@@ -19,7 +19,7 @@ export class UserController {
   }
 
   /**
-   * Get detailed information for a single user
+   * Obtener información detallada de un usuario
    */
   async getUserDetails(req: Request, res: Response): Promise<void> {
     try {
@@ -43,7 +43,7 @@ export class UserController {
   }
 
   /**
-   * Get user by wallet address
+   * Obtener usuario por dirección de wallet
    */
   async getUserByWallet(req: Request, res: Response): Promise<void> {
     try {
@@ -72,7 +72,7 @@ export class UserController {
   }
 
   /**
-   * Update a user's profile
+   * Actualizar el perfil de un usuario
    */
   async updateUser(req: Request, res: Response): Promise<void> {
     try {
@@ -103,7 +103,7 @@ export class UserController {
   }
 
   /**
-   * Update user avatar
+   * Actualizar el avatar de un usuario
    */
   async updateUserAvatar(req: Request, res: Response): Promise<void> {
     try {
@@ -138,7 +138,7 @@ export class UserController {
   }
 
   /**
-   * Update a user's role (requires moderator permissions)
+   * Actualizar el rol de un usuario (requiere permisos de moderador)
    */
   async updateUserRole(req: Request, res: Response): Promise<void> {
     try {
@@ -168,7 +168,7 @@ export class UserController {
   }
 
   /**
-   * Toggle user active status (requires moderator permissions)
+   * Cambiar el estado activo de un usuario (requiere permisos de moderador)
    */
   async toggleUserActive(req: Request, res: Response): Promise<void> {
     try {

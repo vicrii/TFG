@@ -104,7 +104,7 @@ function HomePage() {
     return () => {
       isComponentMounted = false;
     };
-  }, [user?.walletAddress]); // SIMPLIFIED: Only user wallet change should trigger reload
+  }, [user?.walletAddress]); 
 
   // Función para mostrar el nivel del curso con mejor contraste
   const renderLevel = (level: string) => {

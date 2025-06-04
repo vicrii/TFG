@@ -37,7 +37,6 @@ class WalletErrorBoundary extends Component<Props, State> {
                           error.name?.includes('Wallet');
     
     if (isWalletError) {
-      // Completamente silenciado - no mostrar nada en consola para errores de wallet
       return;
     }
     

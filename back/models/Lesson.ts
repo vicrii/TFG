@@ -63,7 +63,7 @@ export interface ILesson extends Document {
   quizQuestions?: QuizQuestion[];
   codeExercises?: CodeExercise[]; // Añadido campo para ejercicios de código
   requiredToProgress?: boolean;
-  minQuizScore?: number; // Percentage (0-100) required to pass
+  minQuizScore?: number; // porcentaje requerido para pasar la lección
 }
 
 export interface IProgress {

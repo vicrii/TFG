@@ -9,9 +9,6 @@ const router = Router();
 
 // Asegurarse de que la API key esté configurada
 const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) {
-  console.error("ADVERTENCIA: GEMINI_API_KEY no está configurada en las variables de entorno");
-}
 
 // Función para manejar la generación de respuestas con Gemini
 async function generateChatResponse(message: string, history: Array<{role: string, content: string}> = []) {
@@ -72,11 +69,10 @@ router.post('/send', async (req, res) => {
       return res.status(400).json({ error: 'Se requiere un mensaje válido' });
     }
 
-    // Generar respuesta
+
     console.log(`Procesando mensaje: "${message.substring(0, 30)}..."`);
     const response = await generateChatResponse(message, history);
     
-    // Devolver respuesta
     return res.json({
       success: true,
       response,

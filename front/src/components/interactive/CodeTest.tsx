@@ -34,15 +34,6 @@ const CodeTest: React.FC<CodeTestProps> = ({
   isCompleted,
   onCompleted,
 }) => {
-  // Debug logging to see what props are received
-  console.log('🔧 CodeTest component props:', {
-    title: title?.substring(0, 30),
-    lessonId,
-    exerciseId,
-    hasOnCompleted: !!onCompleted,
-    isCompleted
-  });
-
   const [code, setCode] = useState(initialCode);
   const [testResults, setTestResults] = useState<boolean[]>([]);
   const [testDetails, setTestDetails] = useState<{ result: any; expected: any; passed: boolean; error?: string | null }[]>([]);
@@ -133,21 +124,11 @@ const CodeTest: React.FC<CodeTestProps> = ({
 
     // Solo marcar como completado si TODAS las pruebas pasan
     const allTestsPassed = results.every(result => result === true);
-    console.log('📊 Resultado de pruebas de código:', {
-      exerciseId,
-      totalTests: results.length,
-      passedTests: results.filter(r => r === true).length,
-      allTestsPassed,
-      hasCallback: !!onCompleted
-    });
     
     if (allTestsPassed && onCompleted && exerciseId) {
-      console.log(`✅ Todas las pruebas pasaron para ejercicio ${exerciseId}, marcando como completado`);
       onCompleted(exerciseId);
     } else if (allTestsPassed) {
-      console.log('✅ Todas las pruebas pasaron pero no hay callback de completado configurado');
     } else {
-      console.log(`❌ No todas las pruebas pasaron (${results.filter(r => r === true).length}/${results.length})`);
     }
   };
 

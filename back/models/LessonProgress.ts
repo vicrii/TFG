@@ -18,14 +18,14 @@ export interface ILessonProgress extends Document {
   completedAt?: Date;
   timeSpent?: number; 
   completedExercises?: ICompletedExercise[];
-  // NUEVOS CAMPOS para tracking separado
+  // NUEVOS CAMPOS para seguimiento separado
   quizCompleted: boolean;
   quizCompletedAt?: Date;
   quizScore?: number;
   codeExercisesCompleted: boolean;
   codeExercisesCompletedAt?: Date;
   // Lista de ejercicios de código completados específicamente
-  completedCodeExercises?: string[]; // Array de IDs de ejercicios completados
+  completedCodeExercises?: string[]; // Arreglo de IDs de ejercicios completados
   createdAt: Date;
   updatedAt: Date;
 }
@@ -80,7 +80,6 @@ const LessonProgressSchema: Schema = new Schema(
       type: [CompletedExerciseSchema],
       default: []
     },
-    // NUEVOS CAMPOS
     quizCompleted: {
       type: Boolean,
       default: false,
@@ -114,7 +113,7 @@ const LessonProgressSchema: Schema = new Schema(
 LessonProgressSchema.pre('save', async function(next) {
   if (this.isModified('quizCompleted') || this.isModified('codeExercisesCompleted')) {
     try {
-      console.log('🔄 LessonProgress middleware triggered. Current state:', {
+      console.log('Middleware de LessonProgress activado. Estado actual:', {
         lessonId: this.lesson,
         quizCompleted: this.quizCompleted,
         codeExercisesCompleted: this.codeExercisesCompleted,
@@ -129,7 +128,7 @@ LessonProgressSchema.pre('save', async function(next) {
         const hasQuiz = Boolean(lesson.quizQuestions && lesson.quizQuestions.length > 0);
         const hasCodeExercises = Boolean(lesson.codeExercises && lesson.codeExercises.length > 0);
         
-        console.log('📚 Lesson requirements:', {
+        console.log('Requisitos de la lección:', {
           hasQuiz,
           hasCodeExercises,
           quizQuestionsCount: lesson.quizQuestions?.length || 0,
@@ -141,40 +140,40 @@ LessonProgressSchema.pre('save', async function(next) {
         if (hasQuiz && hasCodeExercises) {
           // Si tiene ambos, ambos deben estar completados
           shouldBeCompleted = Boolean(this.quizCompleted && this.codeExercisesCompleted);
-          console.log('🔄 Both required - shouldBeCompleted:', shouldBeCompleted, 'quizCompleted:', this.quizCompleted, 'codeExercisesCompleted:', this.codeExercisesCompleted);
+          console.log('Ambos requeridos - debería estar completado:', shouldBeCompleted, 'quiz completado:', this.quizCompleted, 'ejercicios completados:', this.codeExercisesCompleted);
         } else if (hasQuiz && !hasCodeExercises) {
           // Solo quiz, debe estar completado el quiz
           shouldBeCompleted = Boolean(this.quizCompleted);
-          console.log('🎯 Only quiz required - shouldBeCompleted:', shouldBeCompleted, 'quizCompleted:', this.quizCompleted);
+          console.log('Solo quiz requerido - debería estar completado:', shouldBeCompleted, 'quiz completado:', this.quizCompleted);
         } else if (!hasQuiz && hasCodeExercises) {
           // Solo ejercicios, deben estar completados los ejercicios
           shouldBeCompleted = Boolean(this.codeExercisesCompleted);
-          console.log('💻 Only code exercises required - shouldBeCompleted:', shouldBeCompleted, 'codeExercisesCompleted:', this.codeExercisesCompleted);
+          console.log('Solo ejercicios de código requeridos - debería estar completado:', shouldBeCompleted, 'ejercicios completados:', this.codeExercisesCompleted);
         } else {
           // No tiene quiz ni ejercicios - lección de solo contenido
           // Se puede marcar como completada manualmente
           shouldBeCompleted = Boolean(this.completed);
-          console.log('📖 Content only lesson - keeping current completed status:', shouldBeCompleted);
+          console.log('Lección solo de contenido - manteniendo estado actual de completado:', shouldBeCompleted);
         }
         
-        console.log('🎯 Final calculation - shouldBeCompleted:', shouldBeCompleted, 'current completed:', this.completed);
+        console.log('Cálculo final - debería estar completado:', shouldBeCompleted, 'actualmente completado:', this.completed);
         
         if (shouldBeCompleted && !this.completed) {
-          console.log('✅ Setting lesson as completed!');
+          console.log('Marcando lección como completada');
           this.completed = true;
           this.completedAt = new Date();
         } else if (!shouldBeCompleted && this.completed) {
-          console.log('❌ Setting lesson as NOT completed!');
+          console.log('Marcando lección como NO completada');
           this.completed = false;
           this.completedAt = undefined;
         } else {
-          console.log('➡️ No change needed in completion status');
+          console.log('No se necesita cambio en el estado de completado');
         }
       } else {
-        console.log('❌ Lesson not found in middleware');
+        console.log('Error: Lección no encontrada en el middleware');
       }
     } catch (error) {
-      console.error('❌ Error in LessonProgress pre-save middleware:', error);
+      console.error('Error en el middleware pre-save de LessonProgress:', error);
     }
   }
   next();

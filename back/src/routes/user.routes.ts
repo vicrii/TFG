@@ -4,10 +4,8 @@ import { authenticateUser } from '../../db/server/middleware/auth';
 
 const router = Router();
 
-// Public routes
-// None for this service
 
-// Protected routes (require authentication)
+// rutas protegidas (requieren autenticación)
 router.get('/users', authenticateUser, userController.getAllUsers);
 router.get('/users/:userId', authenticateUser, userController.getUserDetails);
 router.get('/users/wallet/:walletAddress', authenticateUser, userController.getUserByWallet);

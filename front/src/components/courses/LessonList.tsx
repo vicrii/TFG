@@ -969,7 +969,7 @@ export const LessonList: React.FC<LessonListProps> = ({
         <Modal.Body className="pt-2">
           <div className="text-center mb-3">
             <div className="bg-danger-subtle rounded-circle d-inline-flex align-items-center justify-content-center" 
-                 style={{ width: '64px', height: '64px' }}>
+                style={{ width: '64px', height: '64px' }}>
               <FaTrash size={24} className="text-danger" />
             </div>
           </div>

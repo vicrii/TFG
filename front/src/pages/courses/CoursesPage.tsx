@@ -7,9 +7,9 @@ import { Pagination, Form, Row, Col, Dropdown, Badge, Button } from 'react-boots
 import { useLocation } from 'react-router-dom';
 import { FaFilter, FaTimes, FaSortAmountDown, FaSortAmountUpAlt, FaFont, FaArrowUp, FaArrowDown } from 'react-icons/fa';
 
-const ITEMS_PER_PAGE = 6; // Or 9, or whatever you prefer
+const ITEMS_PER_PAGE = 6; 
 
-// --- NEW: Define sort options ---
+// --- NUEVO: Definir opciones de ordenación ---
 const sortOptions = [
   { value: 'createdAt_desc', label: 'Más Recientes', icon: <FaSortAmountDown className="me-2"/> },
   { value: 'createdAt_asc', label: 'Más Antiguos', icon: <FaSortAmountUpAlt className="me-2"/> },
@@ -20,7 +20,7 @@ const sortOptions = [
   // { value: 'instructor_asc', label: 'Instructor (A-Z)' }, // Podríamos añadir si se implementa populate en backend
 ];
 
-// CSS Styles for dropdown and tags
+// Estilos CSS para dropdown y etiquetas
 const styles = {
   tagBadge: {
     cursor: 'pointer',
@@ -51,7 +51,7 @@ const styles = {
 };
 
 const CoursesPage: React.FC = () => {
-    // --- Existing States ---
+    // --- Estados Existentes ---
     const [allCourses, setAllCourses] = useState<ICourseData[]>([]);
     const [filteredCourses, setFilteredCourses] = useState<ICourseData[]>([]);
     const [availableTags, setAvailableTags] = useState<string[]>([]);
@@ -60,18 +60,18 @@ const CoursesPage: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
-    // --- NEW Pagination State ---
+    // --- NUEVO: Estado de paginación ---
     const [currentPage, setCurrentPage] = useState<number>(1);
 
-    // --- NEW: Estado para la ordenación ---
+    // --- NUEVO: Estado para la ordenación ---
     const [sortValue, setSortValue] = useState<string>(sortOptions[0].value); // Por defecto: Más recientes
 
-    // --- NEW: Leer instructor de la URL ---
+    // --- NUEVO: Leer instructor de la URL ---
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const instructorFilter = queryParams.get('instructor'); // null si no está
 
-    // OPTIMIZED: Load initial data with cleanup to prevent multiple loads
+    // OPTIMIZADO: Cargar datos iniciales con limpieza para prevenir múltiples cargas
     useEffect(() => {
         let isComponentMounted = true;
 
@@ -81,14 +81,14 @@ const CoursesPage: React.FC = () => {
             setIsLoading(true);
             setError(null);
 
-            // --- NEW: Log the instructor filter --- 
+            // --- NUEVO: Log del filtro de instructor --- 
             console.log('CoursesPage useEffect: instructorFilter =', instructorFilter);
 
-            // --- NEW: Parse sortValue ---
+            // --- NUEVO: Parsear sortValue ---
             const [sortBy, sortOrder] = sortValue.split('_'); // Ej: 'createdAt_desc' -> ['createdAt', 'desc']
 
             try {
-                // Use public courses endpoint instead of authenticated endpoint
+                // Usar endpoint de cursos públicos en lugar de endpoint autenticado
                 const coursesData = await courseService.getPublicCourses({ sortBy, sortOrder, instructor: instructorFilter ?? undefined });
                 
                 if (!isComponentMounted) return;
@@ -125,7 +125,7 @@ const CoursesPage: React.FC = () => {
         };
     }, [sortValue, instructorFilter]);
 
-    // OPTIMIZED: Apply Filters with memoization to prevent unnecessary recalculations
+    // OPTIMIZADO: Aplicar filtros con memoización para prevenir recálculos innecesarios
     useEffect(() => {
         let coursesToShow = [...allCourses];
 
@@ -143,11 +143,11 @@ const CoursesPage: React.FC = () => {
              );
         }
 
-        // OPTIMIZATION: Only update if the filtered courses actually changed
+        // OPTIMIZACIÓN: Solo actualizar si los cursos filtrados realmente cambiaron
         setFilteredCourses(prev => {
             if (prev.length === coursesToShow.length &&
                 prev.every((course, index) => course._id === coursesToShow[index]?._id)) {
-                return prev; // No change, return previous state
+                return prev; // Sin cambios, devolver estado anterior
             }
             return coursesToShow;
         });
@@ -155,23 +155,23 @@ const CoursesPage: React.FC = () => {
 
     }, [searchTerm, selectedTags, allCourses, instructorFilter]);
 
-    // --- NEW: Calculate pagination variables ---
+    // --- NUEVO: Calcular variables de paginación ---
     const totalPages = Math.ceil(filteredCourses.length / ITEMS_PER_PAGE);
     const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
     const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-    // Get the courses for the current page slice
+    // Obtener los cursos para la porción de página actual
     const currentCourses = filteredCourses.slice(indexOfFirstItem, indexOfLastItem);
 
-    // --- NEW: Pagination handlers ---
+    // --- NUEVO: Manejadores de paginación ---
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
-        window.scrollTo(0, 0); // Scroll to top on page change
+        window.scrollTo(0, 0); // Desplazar al inicio en cambio de página
     };
 
     // --- Renderizado ---
     return (
         <div className="container mt-4">
-            {/* === NEW: Título dinámico === */}
+            {/* === NUEVO: Título dinámico === */}
             {instructorFilter ? (
                 <h1 className="mb-4">Cursos de: <code className="fs-5 fw-normal">{instructorFilter}</code></h1>
             ) : (
@@ -280,7 +280,7 @@ const CoursesPage: React.FC = () => {
             </Row>
             {/* === FIN SECCIÓN === */}
 
-            {/* --- Lógica de Display --- */}
+            {/* --- Lógica de Visualización --- */}
             {isLoading && <LoadingSpinner />}
             {error && <ErrorMessage message={error} />}
 
@@ -309,7 +309,7 @@ const CoursesPage: React.FC = () => {
                     )}
                 </>
             )}
-             {/* Informational text if needed */}
+             {/* Texto informativo si es necesario */}
              { !isLoading && !error && filteredCourses.length > 0 && totalPages > 1 && (
                  <p className="text-center text-muted mt-2 small">
                     Mostrando {currentCourses.length} de {filteredCourses.length} cursos (Página {currentPage} de {totalPages})

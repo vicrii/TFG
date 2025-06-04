@@ -11,136 +11,136 @@ export interface IEnrollment {
   progress?: number;
 }
 
-// API client for enrollment-related endpoints
+// Cliente API para endpoints relacionados con inscripciones
 export const enrollmentApi = {
   /**
-   * Get all courses a user is enrolled in
+   * Obtener todos los cursos en los que un usuario está inscrito
    */
   async getEnrolledCourses(): Promise<IEnrollment[]> {
     try {
-      // First attempt: try full enrollments endpoint
+      // Primer intento: probar endpoint completo de inscripciones
       try {
-        // console.log('[enrollmentApi] Attempting to fetch full enrollments');
+        // console.log('[enrollmentApi] Intentando obtener inscripciones completas');
         const response = await apiClient.get<IEnrollment[]>('/enrollments');
         
-        // Cache successful responses for offline use
+        // Cachear respuestas exitosas para uso offline
         if (response && Array.isArray(response)) {
-          // console.log(`[enrollmentApi] Caching ${response.length} enrollments`);
+          // console.log(`[enrollmentApi] Cacheando ${response.length} inscripciones`);
           localStorage.setItem('cachedEnrollments', JSON.stringify(response));
         } else {
-          console.warn('[enrollmentApi] Received non-array response:', response);
+          console.warn('[enrollmentApi] Respuesta recibida no es un arreglo:', response);
         }
         
         return response;
       } catch (error) {
-        console.error('[enrollmentApi] Error getting enrollments, trying basic endpoint:', error);
-        // Second attempt: try basic endpoint
-        // console.log('[enrollmentApi] Attempting to fetch basic enrollments as fallback');
+        console.error('[enrollmentApi] Error obteniendo inscripciones, probando endpoint básico:', error);
+        // Segundo intento: probar endpoint básico
+        // console.log('[enrollmentApi] Intentando obtener inscripciones básicas como respaldo');
         const basicResponse = await apiClient.get<IEnrollment[]>('/enrollments/basic');
         
         if (basicResponse && Array.isArray(basicResponse)) {
-          // console.log(`[enrollmentApi] Caching ${basicResponse.length} basic enrollments`);
+          // console.log(`[enrollmentApi] Cacheando ${basicResponse.length} inscripciones básicas`);
           localStorage.setItem('cachedBasicEnrollments', JSON.stringify(basicResponse));
         }
         
         return basicResponse;
       }
     } catch (error) {
-      console.error('[enrollmentApi] Error fetching enrolled courses:', error);
+      console.error('[enrollmentApi] Error obteniendo cursos inscritos:', error);
       
-      // Handle offline case by returning cached data if available
+      // Manejar caso offline devolviendo datos cacheados si están disponibles
       const cachedEnrollments = localStorage.getItem('cachedEnrollments');
       if (cachedEnrollments) {
         try {
-          // console.log('[enrollmentApi] Using cached enrollments due to connection error');
+          // console.log('[enrollmentApi] Usando inscripciones cacheadas debido a error de conexión');
           return JSON.parse(cachedEnrollments);
         } catch (e) {
-          console.error('[enrollmentApi] Error parsing cached enrollments:', e);
+          console.error('[enrollmentApi] Error parseando inscripciones cacheadas:', e);
         }
       }
       
-      throw new Error(`Error fetching enrolled courses: ${(error as Error).message}`);
+      throw new Error(`Error obteniendo cursos inscritos: ${(error as Error).message}`);
     }
   },
 
   /**
-   * Get basic enrollments (without progress calculation)
+   * Obtener inscripciones básicas (sin cálculo de progreso)
    */
   async getBasicEnrollments(): Promise<IEnrollment[]> {
     try {
-      // console.log('[enrollmentApi] Fetching basic enrollments');
+      // console.log('[enrollmentApi] Obteniendo inscripciones básicas');
       const response = await apiClient.get<IEnrollment[]>('/enrollments/basic');
       
-      // Cache successful responses for offline use
+      // Cachear respuestas exitosas para uso offline
       if (response && Array.isArray(response)) {
-        // console.log(`[enrollmentApi] Caching ${response.length} basic enrollments`);
+        // console.log(`[enrollmentApi] Cacheando ${response.length} inscripciones básicas`);
         localStorage.setItem('cachedBasicEnrollments', JSON.stringify(response));
         return response;
       } else {
-        console.warn('[enrollmentApi] Received non-array response:', response);
-        throw new Error('Invalid response format received from server');
+        console.warn('[enrollmentApi] Respuesta recibida no es un arreglo:', response);
+        throw new Error('Formato de respuesta inválido recibido del servidor');
       }
     } catch (error) {
-      console.error('[enrollmentApi] Error fetching basic enrollments:', error);
+      console.error('[enrollmentApi] Error obteniendo inscripciones básicas:', error);
       
-      // Try to use cached data if available
+      // Intentar usar datos cacheados si están disponibles
       const cachedBasicEnrollments = localStorage.getItem('cachedBasicEnrollments');
       if (cachedBasicEnrollments) {
         try {
-          // console.log('[enrollmentApi] Using cached basic enrollments due to error');
+          // console.log('[enrollmentApi] Usando inscripciones básicas cacheadas debido a error');
           return JSON.parse(cachedBasicEnrollments);
         } catch (e) {
-          console.error('[enrollmentApi] Error parsing cached basic enrollments:', e);
+          console.error('[enrollmentApi] Error parseando inscripciones básicas cacheadas:', e);
         }
       }
       
-      // If cached enrollments are not available, try regular cached enrollments
+      // Si las inscripciones cacheadas no están disponibles, probar inscripciones regulares cacheadas
       const cachedEnrollments = localStorage.getItem('cachedEnrollments');
       if (cachedEnrollments) {
         try {
-          // console.log('[enrollmentApi] Using regular cached enrollments as fallback');
+          // console.log('[enrollmentApi] Usando inscripciones regulares cacheadas como respaldo');
           return JSON.parse(cachedEnrollments);
         } catch (e) {
-          console.error('[enrollmentApi] Error parsing cached regular enrollments:', e);
+          console.error('[enrollmentApi] Error parseando inscripciones regulares cacheadas:', e);
         }
       }
       
-      throw new Error(`Error fetching basic enrollments: ${(error as Error).message}`);
+      throw new Error(`Error obteniendo inscripciones básicas: ${(error as Error).message}`);
     }
   },
 
   /**
-   * Enroll in a course
+   * Inscribirse en un curso
    */
   async enrollInCourse(courseId: string): Promise<{ message: string, enrollment: IEnrollment }> {
     try {
       return await apiClient.post<{ message: string, enrollment: IEnrollment }>(`/enrollments/${courseId}`, {});
     } catch (error) {
-      console.error('Error enrolling in course:', error);
+      console.error('Error inscribiéndose en el curso:', error);
       throw error;
     }
   },
 
   /**
-   * Cancel enrollment in a course
+   * Cancelar inscripción en un curso
    */
   async unenrollFromCourse(courseId: string): Promise<{ message: string }> {
     try {
       return await apiClient.delete<{ message: string }>(`/enrollments/${courseId}`, {});
     } catch (error) {
-      console.error('Error unenrolling from course:', error);
+      console.error('Error cancelando inscripción del curso:', error);
       throw error;
     }
   },
 
   /**
-   * Check if a user is enrolled in a course
+   * Verificar si un usuario está inscrito en un curso
    */
   async checkEnrollmentStatus(courseId: string): Promise<{ isEnrolled: boolean }> {
     try {
       return await apiClient.get<{ isEnrolled: boolean }>(`/enrollments/check/${courseId}`);
     } catch (error) {
-      console.error('Error checking enrollment status:', error);
+      console.error('Error verificando estado de inscripción:', error);
       return { isEnrolled: false };
     }
   }

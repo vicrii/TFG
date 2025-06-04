@@ -1,7 +1,4 @@
 # Ignorar ejecutables y modelos grandes
-/scripts/ffmpeg/bin/
-/src/models/*.bin
-/src/models/*.onnx
 /node_modules/
 /.cache/
 /dist/

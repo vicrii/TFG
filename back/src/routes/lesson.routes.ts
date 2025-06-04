@@ -19,7 +19,6 @@ router.post('/lessons/by-course/:courseId', authenticateUser, lessonController.c
 // Marcar una lección como completada (para lecciones de solo contenido)
 router.post('/lessons/:id/complete', authenticateUser, lessonController.markLessonAsCompleted);
 
-// NUEVAS RUTAS para completado separado
 // Marcar quiz como completado
 router.post('/lessons/:id/complete-quiz', authenticateUser, lessonController.markQuizCompleted);
 

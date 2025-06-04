@@ -62,25 +62,6 @@ cp back/.env.example back/.env
 npm run dev
 ```
 
-### 🧪 **Datos de Prueba**
-
-#### **Cursos de Ejemplo**
-- **"Introducción a Blockchain"**: Curso básico con 5 lecciones
-- **"Desarrollo Solana"**: Curso avanzado con ejercicios de código
-- **"Smart Contracts"**: Curso con quizzes y evaluaciones
-
-#### **Usuarios de Prueba**
-- **Admin**: Puede crear usuarios, gestionar todos los cursos
-- **Instructor**: Puede crear cursos, ver analytics, gestionar estudiantes
-- **Estudiante**: Puede inscribirse, ver progreso, completar lecciones
-
-### 📝 **Notas Adicionales**
-- La aplicación soporta autenticación tradicional y blockchain (Solana)
-- Responsive design compatible con móviles, tablets y desktop
-- Accesibilidad WAI-A implementada
-- HTTPS configurado en producción con certificados SSL
-- Base de datos MongoDB con esquemas relacionales
-
 ---
 
 ## 🏗️ Arquitectura MVC
@@ -120,26 +101,6 @@ graph TB
     M1 --> M2
 ```
 
-### **Descripción de Capas**
-
-#### **🎨 VISTA (Frontend)**
-- **React 19**: Framework principal para interfaces dinámicas
-- **TypeScript**: Tipado estático para mejor desarrollo
-- **Bootstrap 5**: Framework CSS para responsive design
-- **HTML5 semántico**: Estructura accesible y SEO-friendly
-- **CSS3 moderno**: Animations, Grid, Flexbox, Custom Properties
-
-#### **🎮 CONTROLADOR (Backend)**
-- **Express.js**: Framework web para Node.js
-- **REST API**: Endpoints estructurados siguiendo estándares
-- **Middleware personalizado**: Autenticación, validación, CORS
-- **Gestión de sesiones**: JWT tokens y cookies seguras
-
-#### **💾 MODELO (Datos)**
-- **MongoDB**: Base de datos NoSQL para flexibilidad
-- **Mongoose**: ODM para modelado de datos y relaciones
-- **Schemas estructurados**: Validación y consistencia de datos
-
 ---
 
 ## 👥 Tipos de Usuarios y Operaciones
@@ -150,23 +111,6 @@ graph TB
 | **👨‍🏫 Instructor** | • Crear/editar cursos<br>• Gestionar estudiantes<br>• Ver analytics propios | Cursos propios |
 | **👨‍🎓 Estudiante** | • Ver cursos<br>• Completar lecciones<br>• Realizar evaluaciones | Cursos inscritos |
 | **👤 Visitante** | • Ver catálogo público<br>• Registro/login | Público |
-
-### **🔄 Flujos de Usuario Principales**
-
-#### **Estudiante**
-1. **Registro/Login** → Autenticación web o wallet
-2. **Explorar Cursos** → Catálogo con filtros
-3. **Inscribirse** → Proceso de matrícula
-4. **Estudiar** → Lecciones, videos, ejercicios
-5. **Evaluar** → Quizzes y proyectos
-6. **Certificar** → Completar curso
-
-#### **Instructor**
-1. **Login** → Panel de instructor
-2. **Crear Curso** → Editor con IA
-3. **Gestionar Contenido** → Lecciones, evaluaciones
-4. **Monitorear** → Analytics y progreso
-5. **Moderar** → Comentarios y consultas
 
 ---
 
@@ -197,23 +141,6 @@ graph TB
     ├── 🚪 Login (/login)
     └── 📝 Registro (/register)
 ```
-
-### **Navegación Responsive**
-
-#### **Desktop (≥1200px)**
-- Navbar completa con todos los enlaces
-- Sidebar para navegación de curso
-- Breadcrumbs para orientación
-
-#### **Tablet (768px-1199px)**
-- Navbar colapsable
-- Navegación simplificada
-- Contenido optimizado
-
-#### **Mobile (≤767px)**
-- Hamburger menu
-- Navegación por gestos
-- Interfaz táctil optimizada
 
 ---
 
@@ -264,9 +191,9 @@ erDiagram
     }
 ```
 
-### **Paso a Tablas (Colecciones MongoDB)**
+### **Tablas MongoDB**
 
-#### **1. Colección: `users`**
+#### **users**
 ```javascript
 {
   _id: ObjectId,
@@ -274,52 +201,32 @@ erDiagram
   displayName: String,
   role: String, // 'admin', 'instructor', 'student'
   walletAddress: String,
-  createdAt: Date,
-  
-  // Índices
-  indexes: [
-    { email: 1 }, // único
-    { walletAddress: 1 },
-    { role: 1 }
-  ]
+  createdAt: Date
 }
 ```
 
-#### **2. Colección: `courses`**
+#### **courses**
 ```javascript
 {
   _id: ObjectId,
   title: String,
   description: String,
-  instructor: ObjectId, // ref: 'users'
+  instructor: ObjectId, // ref: users
   published: Boolean,
-  createdAt: Date,
-  
-  // Índices
-  indexes: [
-    { instructor: 1 },
-    { published: 1 },
-    { createdAt: -1 }
-  ]
+  createdAt: Date
 }
 ```
 
-#### **3. Colección: `lessons`**
+#### **lessons**
 ```javascript
 {
   _id: ObjectId,
   title: String,
   content: String, // HTML
-  course: ObjectId, // ref: 'courses'
+  course: ObjectId, // ref: courses
   order: Number,
   videoUrl: String,
-  quizQuestions: [Object],
-  
-  // Índices
-  indexes: [
-    { course: 1, order: 1 },
-    { course: 1 }
-  ]
+  quizQuestions: [Object]
 }
 ```
 
@@ -330,48 +237,45 @@ erDiagram
 ### **🎨 Diseño de Interfaces**
 
 #### **✅ HTML5 y CSS3**
-- **HTML5 semántico**: `<header>`, `<nav>`, `<main>`, `<section>`
-- **CSS3**: Flexbox, Grid, Animations, Custom Properties
-- **Progressive Enhancement**: Funcionalidad básica sin JavaScript
+- Elementos semánticos: `<header>`, `<nav>`, `<main>`, `<section>`
+- CSS3: Flexbox, Grid, Animations, Custom Properties
+- Progressive Enhancement
 
 #### **✅ Multimedia**
-- **Videos integrados**: Reproductor personalizado con controles
-- **Imágenes optimizadas**: WebP, lazy loading, responsive images
-- **Audio**: Feedback de interacciones (opcional)
-- **SVG**: Iconos escalables y animaciones
+- Videos integrados con controles personalizados
+- Imágenes optimizadas (WebP, lazy loading)
+- Audio para feedback de interacciones
 
 #### **✅ React Framework**
-**Justificación de Elección:**
-- **Componentización**: Reutilización y mantenibilidad
-- **Virtual DOM**: Rendimiento optimizado
-- **Ecosistema**: Abundantes librerías y herramientas
-- **TypeScript**: Tipado estático para mejor desarrollo
-- **Hooks**: Gestión moderna de estado
+**Justificación:**
+- Componentización para reutilización
+- Virtual DOM para rendimiento
+- Ecosistema maduro y soporte
+- TypeScript para mejor desarrollo
 
 #### **✅ Responsive Design**
-- **Mobile First**: Diseño optimizado para móviles primero
-- **Breakpoints**: 576px, 768px, 992px, 1200px, 1400px
-- **Bootstrap 5**: Grid system y componentes responsive
-- **Flexible Layout**: CSS Grid y Flexbox
+- Mobile First approach
+- Bootstrap 5 grid system
+- Breakpoints: 576px, 768px, 992px, 1200px
+- CSS Grid y Flexbox
 
 #### **✅ Accesibilidad WAI-A**
-- **Navegación por teclado**: Tab index y focus management
-- **Screen readers**: ARIA labels y roles
-- **Contraste**: Ratios WCAG AA (4.5:1)
-- **Texto alternativo**: Alt tags descriptivos
-- **Formularios**: Labels asociados y validación
+- Navegación por teclado
+- ARIA labels y roles
+- Contraste WCAG AA (4.5:1)
+- Alt tags descriptivos
 
 #### **✅ Bootstrap Justificación**
-- **Rapid prototyping**: Desarrollo rápido de interfaces
-- **Componentes consistentes**: Grid, botones, formularios
-- **Responsive nativo**: Mobile-first approach
-- **Comunidad**: Amplia documentación y soporte
+- Rapid prototyping
+- Componentes consistentes
+- Grid responsive nativo
+- Comunidad y documentación
 
 ### **📱 Entornos Cliente**
 
 #### **✅ Validación Cliente**
 ```typescript
-// Validación de formularios
+// Validación formularios
 const validateForm = (data: FormData) => {
   const errors: ValidationErrors = {};
   
@@ -393,15 +297,6 @@ const validateForm = (data: FormData) => {
 const apiClient = {
   async get<T>(url: string): Promise<T> {
     const response = await fetch(url);
-    return response.json();
-  },
-  
-  async post<T>(url: string, data: any): Promise<T> {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
     return response.json();
   }
 };
@@ -458,10 +353,9 @@ app.use(cors({ credentials: true }));
 ### **🔒 Servidor y Administración**
 
 #### **✅ Servidor Online**
-- **Railway**: Hosting en la nube con CI/CD
-- **Nginx**: Proxy reverso y servicio de archivos estáticos
-- **SSL/TLS**: Certificados automáticos
-- **CDN**: Cloudflare para optimización
+- Railway hosting con CI/CD
+- Nginx como proxy reverso
+- Configuración automática SSL
 
 #### **✅ Acceso Cifrado**
 ```nginx
@@ -532,12 +426,8 @@ const requireRole = (role: string) => (req, res, next) => {
 │   └── package.json
 │
 ├── docker-compose.yml        # Orquestación
-├── README.md                 # Este archivo
-└── docs/                     # Documentación
-    ├── installation/         # Manual de instalación
-    ├── user-manual/          # Manual de usuario
-    ├── admin-manual/         # Manual de administración
-    └── api/                  # Documentación API
+├── README-DAW.md            # Este archivo
+└── docs/                    # Documentación
 ```
 
 ---

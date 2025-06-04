@@ -8,7 +8,7 @@ interface CourseParams {
   courseId: string;
 }
 
-// get all courses published
+// obtener todos los cursos publicados
 const getAllPublishedCourses: RequestHandler = async (req, res, next) => {
   try {
     const filter: any = { published: true };

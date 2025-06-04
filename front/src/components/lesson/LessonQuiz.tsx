@@ -95,6 +95,15 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
     fetchQuizAndCode();
   }, [lessonId]);
 
+  // Set the correct active tab based on available content
+  useEffect(() => {
+    if (questions.length > 0) {
+      setActiveTab('quiz');
+    } else if (codeExercises.length > 0) {
+      setActiveTab('code');
+    }
+  }, [questions.length, codeExercises.length]);
+
   const handleAnswerSelect = (questionIndex: number, answerIndex: number) => {
     const newAnswers = [...answers];
     newAnswers[questionIndex] = answerIndex;
@@ -131,15 +140,6 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
         // Obtener información actualizada del curso para determinar progreso
         try {
           const lessons = await lessonService.getCourseLessons(courseId, user.walletAddress);
-          console.log('📊 Lessons after quiz completion:', lessons.map(l => ({ 
-            id: l._id,
-            title: l.title, 
-            isCompleted: l.isCompleted,
-            quizCompleted: l.quizCompleted,
-            codeExercisesCompleted: l.codeExercisesCompleted,
-            hasQuiz: (l.quizQuestions?.length || 0) > 0,
-            hasCode: (l.codeExercises?.length || 0) > 0
-          })));
           
           const completedLessons = lessons.filter(l => l.isCompleted).length;
           const currentLessonIdx = lessons.findIndex(l => l._id === lessonId);
@@ -153,31 +153,18 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
           const hasCodeExercises = codeExercises && codeExercises.length > 0;
           const isLessonFullyCompleted = currentLesson?.isCompleted;
           
-          console.log('🔍 Lección actual después de completar quiz:', {
-            currentLessonTitle: currentLesson?.title,
-            isCompleted: currentLesson?.isCompleted,
-            quizCompleted: currentLesson?.quizCompleted,
-            codeExercisesCompleted: currentLesson?.codeExercisesCompleted,
-            hasCodeExercises,
-            isLessonFullyCompleted,
-            shouldShowModal: isLessonFullyCompleted
-          });
-          
           if (isLessonFullyCompleted) {
             // Solo mostrar modal si la lección está totalmente completada
-            console.log('🎉 Mostrando modal de lección completada');
             setShowCompletionModal(true);
           } else if (hasCodeExercises) {
             // Si hay ejercicios de código pendientes, mostrar una notificación diferente
-            console.log('⏳ Quiz completado, pero faltan ejercicios de código');
             setShowQuizCompletedModal(true);
           } else {
             // Si no hay ejercicios de código, mostrar el modal de completado
-            console.log('🎉 No hay ejercicios de código, mostrando modal de completado');
             setShowCompletionModal(true);
           }
         } catch (error) {
-          console.error('❌ Error getting course progress:', error);
+          console.error('Error getting course progress:', error);
           // En caso de error, no mostrar modal para evitar confusión
         }
       } catch (e) {
@@ -190,24 +177,14 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
 
   // Función para manejar cuando se completa un ejercicio de código
   const handleCodeExerciseCompleted = async (exerciseId: string) => {
-    console.log('🚀 handleCodeExerciseCompleted llamado con exerciseId:', exerciseId);
-    
     if (!user?.walletAddress) {
-      console.log('❌ No hay wallet address');
       return;
     }
     
     try {
-      console.log('🔄 Marcando ejercicio como completado...', { lessonId, exerciseId, walletAddress: user.walletAddress });
       const result = await lessonService.markCodeExerciseCompleted(lessonId, exerciseId, user.walletAddress);
-      console.log('✅ Ejercicio marcado como completado, resultado:', {
-        isCompleted: result.isCompleted,
-        quizCompleted: result.quizCompleted,
-        codeExercisesCompleted: result.codeExercisesCompleted
-      });
       
       if (onCompleted) {
-        console.log('🔄 Llamando callback onCompleted...');
         await onCompleted();
       }
 
@@ -216,25 +193,15 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
       const currentLessonIdx = lessons.findIndex(l => l._id === lessonId);
       const currentLesson = lessons[currentLessonIdx];
       
-      console.log('🔍 Estado de la lección después de completar ejercicio:', {
-        currentLessonTitle: currentLesson?.title,
-        isCompleted: currentLesson?.isCompleted,
-        quizCompleted: currentLesson?.quizCompleted,
-        codeExercisesCompleted: currentLesson?.codeExercisesCompleted
-      });
-      
       if (currentLesson?.isCompleted) {
         const completedLessons = lessons.filter(l => l.isCompleted).length;
         setCurrentLessonIndex(currentLessonIdx);
         setTotalLessons(lessons.length);
         setIsCourseCompleted(completedLessons === lessons.length);
-        console.log('🎉 Lección completamente terminada, mostrando modal');
         setShowCompletionModal(true);
-      } else {
-        console.log('⏳ Lección aún no completamente terminada');
       }
     } catch (error) {
-      console.error('❌ Error marking code exercise as completed:', error);
+      console.error('Error marking code exercise as completed:', error);
     }
   };
 
@@ -330,22 +297,6 @@ const LessonQuiz: React.FC<LessonQuizProps> = ({ lessonId, courseId, onCompleted
               {codeExercises.map((exercise, idx) => {
                 // Usar _id si id no está disponible, con fallback más robusto
                 const exerciseId = exercise.id || (exercise as any)._id || `exercise-${lessonId}-${idx}`;
-                console.log('💻 Renderizando ejercicio:', {
-                  originalId: exercise.id,
-                  _id: (exercise as any)._id,
-                  finalExerciseId: exerciseId,
-                  index: idx
-                });
-
-                // DEBUGGING: Verificar todas las props antes de pasarlas
-                console.log('🔍 DEBUGGING - Props que se van a pasar a CodeTest:', {
-                  title: exercise.title,
-                  lessonId: lessonId,
-                  exerciseId: exerciseId,
-                  hasOnCompleted: !!handleCodeExerciseCompleted,
-                  exercise: exercise,
-                  isCompleted: exercise.isCompleted
-                });
                 
                 return (
                   <CodeTest

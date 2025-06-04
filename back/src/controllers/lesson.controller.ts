@@ -11,7 +11,7 @@ export class LessonController {
       const { courseId } = req.params;
       const walletAddress = req.headers['x-wallet-address'] as string;
 
-      // Buscar el usuario por wallet address
+      // Buscar el usuario por dirección de wallet
       const user = await User.findOne({ walletAddress });
       if (!user) {
         res.status(404).json({ message: 'Usuario no encontrado' });
@@ -22,7 +22,7 @@ export class LessonController {
       const lessons = await lessonService.getCourseLessons(courseId, userId);
       res.json(lessons);
     } catch (error) {
-      console.error('Error in getCourseLessons controller:', error);
+      console.error('Error en el controlador getCourseLessons:', error);
       res.status(500).json({ 
         message: 'Error al obtener lecciones del curso',
         error: (error as Error).message 
@@ -38,7 +38,7 @@ export class LessonController {
       const { id } = req.params;
       const walletAddress = req.headers['x-wallet-address'] as string;
 
-      // Buscar el usuario por wallet address
+      // Buscar el usuario por dirección de wallet
       const user = await User.findOne({ walletAddress });
       if (!user) {
         res.status(404).json({ message: 'Usuario no encontrado' });
@@ -55,7 +55,7 @@ export class LessonController {
 
       res.json(lesson);
     } catch (error) {
-      console.error('Error in getLessonById controller:', error);
+      console.error('Error en el controlador getLessonById:', error);
       res.status(500).json({
         message: 'Error al obtener la lección',
         error: (error as Error).message
@@ -72,15 +72,6 @@ export class LessonController {
       const lessonData = req.body;
       const walletAddress = req.headers['x-wallet-address'] as string;
       
-      // Debug logging para entender qué está llegando
-      console.log('🔍 CONTROLLER - courseId:', courseId);
-      console.log('🔍 CONTROLLER - walletAddress:', walletAddress);
-      console.log('🔍 CONTROLLER - req.body completo:', JSON.stringify(req.body, null, 2));
-      console.log('🔍 CONTROLLER - lessonData.title:', lessonData.title);
-      console.log('🔍 CONTROLLER - lessonData.content:', lessonData.content);
-      console.log('🔍 CONTROLLER - typeof lessonData.title:', typeof lessonData.title);
-      console.log('🔍 CONTROLLER - typeof lessonData.content:', typeof lessonData.content);
-      
       if (!walletAddress) {
         res.status(401).json({ message: 'No autorizado: Se requiere dirección de wallet' });
         return;
@@ -91,7 +82,7 @@ export class LessonController {
       const newLesson = await lessonService.createLesson(courseId, lessonData);
       res.status(201).json(newLesson);
     } catch (error) {
-      console.error('Error in createLesson controller:', error);
+      console.error('Error en el controlador createLesson:', error);
       res.status(500).json({ 
         message: 'Error al crear la lección',
         error: (error as Error).message 
@@ -124,7 +115,7 @@ export class LessonController {
       
       res.json(updatedLesson);
     } catch (error) {
-      console.error('Error in updateLesson controller:', error);
+      console.error('Error en el controlador updateLesson:', error);
       res.status(500).json({ 
         message: 'Error al actualizar la lección',
         error: (error as Error).message 
@@ -156,7 +147,7 @@ export class LessonController {
       
       res.status(200).json({ message: 'Lección eliminada exitosamente' });
     } catch (error) {
-      console.error('Error in deleteLesson controller:', error);
+      console.error('Error en el controlador deleteLesson:', error);
       res.status(500).json({ 
         message: 'Error al eliminar la lección',
         error: (error as Error).message 
@@ -177,7 +168,7 @@ export class LessonController {
         return;
       }
 
-      // Buscar el usuario por wallet address
+      // Buscar el usuario por dirección de wallet
       const user = await User.findOne({ walletAddress });
       if (!user) {
         res.status(404).json({ message: 'Usuario no encontrado' });
@@ -194,7 +185,7 @@ export class LessonController {
 
       res.json(updatedLesson);
     } catch (error) {
-      console.error('Error in markLessonAsCompleted controller:', error);
+      console.error('Error en el controlador markLessonAsCompleted:', error);
       res.status(500).json({
         message: 'Error al marcar la lección como completada',
         error: (error as Error).message
@@ -215,7 +206,7 @@ export class LessonController {
         return;
       }
 
-      // Buscar el usuario por wallet address
+      // Buscar el usuario por dirección de wallet
       const user = await User.findOne({ walletAddress });
       if (!user) {
         res.status(404).json({ message: 'Usuario no encontrado' });
@@ -232,7 +223,7 @@ export class LessonController {
 
       res.json(updatedLesson);
     } catch (error) {
-      console.error('Error in markCodeExerciseCompleted controller:', error);
+      console.error('Error en el controlador markCodeExerciseCompleted:', error);
       res.status(500).json({
         message: 'Error al marcar el ejercicio como completado',
         error: (error as Error).message
@@ -259,7 +250,7 @@ export class LessonController {
         return;
       }
 
-      // Buscar el usuario por wallet address
+      // Buscar el usuario por dirección de wallet
       const user = await User.findOne({ walletAddress });
       if (!user) {
         res.status(404).json({ message: 'Usuario no encontrado' });
@@ -276,7 +267,7 @@ export class LessonController {
 
       res.json(updatedLesson);
     } catch (error) {
-      console.error('Error in markQuizCompleted controller:', error);
+      console.error('Error en el controlador markQuizCompleted:', error);
       res.status(500).json({
         message: 'Error al marcar el quiz como completado',
         error: (error as Error).message

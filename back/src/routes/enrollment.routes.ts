@@ -4,7 +4,7 @@ import { authenticateUser } from '../../db/server/middleware/auth';
 
 const router = Router();
 
-// All enrollment routes require authentication
+// necesitamos autenticación para todas las rutas
 router.get('/enrollments', authenticateUser, enrollmentController.getEnrolledCourses);
 router.get('/enrollments/basic', authenticateUser, enrollmentController.getBasicEnrollments);
 router.post('/enrollments/:courseId', authenticateUser, enrollmentController.enrollInCourse);

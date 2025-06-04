@@ -3,7 +3,7 @@ import { enrollmentService, IEnrollmentData } from '../services/enrollment/enrol
 
 export class EnrollmentController {
   /**
-   * Get all courses a user is enrolled in
+   * Obtener todos los cursos en los que un usuario está inscrito
    */
   async getEnrolledCourses(req: Request, res: Response): Promise<void> {
     try {
@@ -26,7 +26,7 @@ export class EnrollmentController {
   }
 
   /**
-   * Get basic enrollments (without progress calculation)
+   * Obtener inscripciones básicas (sin cálculo de progreso)
    */
   async getBasicEnrollments(req: Request, res: Response): Promise<void> {
     try {
@@ -49,7 +49,7 @@ export class EnrollmentController {
   }
 
   /**
-   * Enroll in a course
+   * Inscribirse en un curso
    */
   async enrollInCourse(req: Request, res: Response): Promise<void> {
     try {
@@ -75,7 +75,7 @@ export class EnrollmentController {
     } catch (error) {
       console.error('Error in enrollInCourse controller:', error);
       
-      // Handle specific errors
+      // manejar errores específicos
       if (error instanceof Error) {
         if (error.message.includes('Already enrolled')) {
           res.status(409).json({ message: error.message });
@@ -95,7 +95,7 @@ export class EnrollmentController {
   }
 
   /**
-   * Cancel enrollment in a course
+   * cancelar inscripción en un curso
    */
   async unenrollFromCourse(req: Request, res: Response): Promise<void> {
     try {
@@ -129,7 +129,7 @@ export class EnrollmentController {
   }
 
   /**
-   * Check if a user is enrolled in a course
+   * Comprobar si un usuario está inscrito en un curso
    */
   async checkEnrollmentStatus(req: Request, res: Response): Promise<void> {
     try {

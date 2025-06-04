@@ -4,7 +4,7 @@ import { LessonProgress as Progress } from '../../../models/LessonProgress';
 import { UserActivity } from '../../../models/UserActivity';
 import { Question } from '../../../models/Question';
 
-// Interface para la respuesta de lecciones
+// Interfaz para la respuesta de lecciones
 export interface LessonData {
   _id: string;
   title: string;
@@ -43,7 +43,7 @@ export interface LessonData {
   completedCodeExercises?: string[];
 }
 
-// Helper para convertir documento de Mongoose a LessonData
+// Función auxiliar para convertir documento de Mongoose a LessonData
 const convertToLessonData = (doc: any, userProgress?: any): LessonData => {
   if (!doc) return null as unknown as LessonData;
 
@@ -108,15 +108,15 @@ export class LessonService {
         throw new Error('ID de curso inválido');
       }
 
-      // Obtener todas las lecciones del curso, ordenadas por el campo 'order'
+      // Obtener todas las lecciones del curso, ordenadas por el campo 'orden'
       const lessons = await Lesson.find({ course: courseId }).sort({ order: 1 });
 
-      // Si no hay lecciones, devolver array vacío
+      // Si no hay lecciones, devolver arreglo vacío
       if (!lessons || lessons.length === 0) {
         return [];
       }
 
-      // Si hay un userId, obtener el progreso del usuario
+      // Si hay un identificador de usuario, obtener el progreso del usuario
       let userProgresses: any[] = [];
       if (userId && mongoose.Types.ObjectId.isValid(userId)) {
         userProgresses = await Progress.find({
@@ -200,13 +200,13 @@ export class LessonService {
     courseId: string, 
     lessonData: Omit<LessonData, '_id' | 'course' | 'createdAt' | 'updatedAt' | 'isCompleted' | 'isLocked'>
   ): Promise<LessonData> {
-    console.log('🔍 SERVICE - createLesson called with:');
-    console.log('🔍 SERVICE - courseId:', courseId);
-    console.log('🔍 SERVICE - lessonData:', JSON.stringify(lessonData, null, 2));
-    console.log('🔍 SERVICE - lessonData.title:', lessonData.title);
-    console.log('🔍 SERVICE - lessonData.content:', lessonData.content);
-    console.log('🔍 SERVICE - typeof lessonData.title:', typeof lessonData.title);
-    console.log('🔍 SERVICE - typeof lessonData.content:', typeof lessonData.content);
+    console.log('SERVICE - createLesson llamado con:');
+    console.log('SERVICE - courseId:', courseId);
+    console.log('SERVICE - lessonData:', JSON.stringify(lessonData, null, 2));
+    console.log('SERVICE - lessonData.title:', lessonData.title);
+    console.log('SERVICE - lessonData.content:', lessonData.content);
+    console.log('SERVICE - tipo de lessonData.title:', typeof lessonData.title);
+    console.log('SERVICE - tipo de lessonData.content:', typeof lessonData.content);
 
     const session = await mongoose.startSession();
     
@@ -225,7 +225,7 @@ export class LessonService {
           .session(session);
         
         const newOrder = highestOrderLesson ? highestOrderLesson.order + 1 : 0;
-        console.log('🔍 SERVICE - Calculated newOrder:', newOrder);
+        console.log('SERVICE - Nuevo orden calculado:', newOrder);
 
         // Crear la nueva lección usando el orden calculado
         const newLessonData = {
@@ -234,18 +234,18 @@ export class LessonService {
           order: newOrder
         };
         
-        console.log('🔍 SERVICE - About to create lesson with data:', JSON.stringify(newLessonData, null, 2));
+        console.log('SERVICE - A punto de crear lección con datos:', JSON.stringify(newLessonData, null, 2));
         
         const newLesson = new Lesson(newLessonData);
         const savedLesson = await newLesson.save({ session });
         result = savedLesson;
         
-        console.log('✅ SERVICE - Lesson created successfully:', result._id);
+        console.log('SERVICE - Lección creada exitosamente:', result._id);
       });
 
       return convertToLessonData(result);
     } catch (error) {
-      console.error('❌ SERVICE - Error creating lesson:', error);
+      console.error('SERVICE - Error al crear lección:', error);
       throw error;
     } finally {
       await session.endSession();
@@ -271,7 +271,7 @@ export class LessonService {
 
       // Actualizar los campos proporcionados
       Object.keys(lessonData).forEach(key => {
-        // @ts-ignore - La operación es segura aunque TypeScript no lo reconozca
+        // @ts-ignore - La operación es segura aunque TypeScript no la reconozca
         lesson[key] = lessonData[key];
       });
 
@@ -291,27 +291,27 @@ export class LessonService {
         return false;
       }
 
-      console.log(`Deleting lesson ${lessonId} and all related data...`);
+      console.log(`Eliminando lección ${lessonId} y todos los datos relacionados...`);
 
       // 1. Eliminar actividades de usuario de la lección
       const deletedActivities = await UserActivity.deleteMany({ lesson: lessonId });
-      console.log(`Deleted ${deletedActivities.deletedCount} user activities`);
+      console.log(`Eliminadas ${deletedActivities.deletedCount} actividades de usuario`);
 
       // 2. Eliminar preguntas de la lección
       const deletedQuestions = await Question.deleteMany({ lessonId: lessonId });
-      console.log(`Deleted ${deletedQuestions.deletedCount} questions`);
+      console.log(`Eliminadas ${deletedQuestions.deletedCount} preguntas`);
 
       // 3. Eliminar registros de progreso asociados
       const deletedProgress = await Progress.deleteMany({ lesson: lessonId });
-      console.log(`Deleted ${deletedProgress.deletedCount} lesson progress records`);
+      console.log(`Eliminados ${deletedProgress.deletedCount} registros de progreso de lección`);
 
       // 4. Finalmente, eliminar la lección
       const result = await Lesson.deleteOne({ _id: lessonId });
-      console.log(`Lesson ${lessonId} deleted successfully`);
+      console.log(`Lección ${lessonId} eliminada exitosamente`);
 
       return result.deletedCount === 1;
     } catch (error) {
-      console.error(`Error deleting lesson ${lessonId}:`, error);
+      console.error(`Error al eliminar lección ${lessonId}:`, error);
       throw error;
     }
   }
@@ -369,25 +369,25 @@ export class LessonService {
    */
   async markQuizCompleted(lessonId: string, userId: string, score: number): Promise<LessonData | null> {
     try {
-      console.log('🎯 markQuizCompleted called with:', { lessonId, userId, score });
+      console.log('markQuizCompleted llamado con:', { lessonId, userId, score });
       
       if (!mongoose.Types.ObjectId.isValid(lessonId)) {
-        console.log('❌ Invalid lessonId:', lessonId);
+        console.log('ID de lección inválido:', lessonId);
         return null;
       }
 
       const lesson = await Lesson.findById(lessonId);
       if (!lesson) {
-        console.log('❌ Lesson not found:', lessonId);
+        console.log('Lección no encontrada:', lessonId);
         return null;
       }
 
-      console.log('✅ Lesson found:', lesson.title);
+      console.log('Lección encontrada:', lesson.title);
 
       let progress = await Progress.findOne({ user: userId, lesson: lessonId });
       
       if (!progress) {
-        console.log('📝 Creating new progress record');
+        console.log('Creando nuevo registro de progreso');
         progress = new Progress({
           user: new mongoose.Types.ObjectId(userId),
           lesson: lessonId,
@@ -397,29 +397,29 @@ export class LessonService {
           codeExercisesCompleted: false
         });
       } else {
-        console.log('📝 Found existing progress:', {
+        console.log('Progreso existente encontrado:', {
           quizCompleted: progress.quizCompleted,
           codeExercisesCompleted: progress.codeExercisesCompleted,
           completed: progress.completed
         });
       }
 
-      console.log('🎯 Marking quiz as completed with score:', score);
+      console.log('Marcando quiz como completado con puntuación:', score);
       progress.quizCompleted = true;
       progress.quizCompletedAt = new Date();
       progress.quizScore = score;
 
-      console.log('💾 Saving progress...');
+      console.log('Guardando progreso...');
       await progress.save(); // El middleware calculará si debe marcar completed = true
       
-      console.log('✅ Progress saved. Final state:', {
+      console.log('Progreso guardado. Estado final:', {
         quizCompleted: progress.quizCompleted,
         codeExercisesCompleted: progress.codeExercisesCompleted,
         completed: progress.completed
       });
 
       const result = convertToLessonData(lesson, progress);
-      console.log('📤 Returning lesson data with completion status:', {
+      console.log('Devolviendo datos de lección con estado de completado:', {
         isCompleted: result.isCompleted,
         quizCompleted: result.quizCompleted,
         codeExercisesCompleted: result.codeExercisesCompleted
@@ -427,7 +427,7 @@ export class LessonService {
       
       return result;
     } catch (error) {
-      console.error('❌ Error in markQuizCompleted:', error);
+      console.error('Error en markQuizCompleted:', error);
       throw error;
     }
   }
