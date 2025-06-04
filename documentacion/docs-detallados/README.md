@@ -75,15 +75,6 @@ Bienvenido a la documentación completa de la Plataforma de Aprendizaje Blockcha
 - [**Integrar Nueva API de IA**](examples/ai-integration.md)
 - [**Customizar el Dashboard**](examples/dashboard-customization.md)
 
-## 🆘 Soporte
-
-¿No encuentras lo que buscas? Aquí tienes más recursos:
-
-- 🔍 **Buscar en la documentación**: Usa Ctrl+F para buscar términos específicos
-- 📝 **GitHub Issues**: [Reportar problemas o sugerir mejoras](https://github.com/vicrii/TFG/issues)
-- 💬 **Discord**: [Únete a la comunidad](https://discord.gg/plataforma-educativa)
-- 📧 **Email**: soporte@plataforma-educativa.com
-
 ## 🔄 Actualizaciones de Documentación
 
 Esta documentación se actualiza regularmente. Última actualización: **Enero 2024**

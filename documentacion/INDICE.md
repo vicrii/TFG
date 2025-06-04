@@ -46,7 +46,6 @@ documentacion/
 ### Para Profesores Evaluadores
 1. **Login rápido**: [MANUAL-LOGIN-PROFESORES.md](./MANUAL-LOGIN-PROFESORES.md)
 2. **Credenciales de prueba** incluidas en el manual
-3. **Soporte directo** para resolver problemas
 
 ### Para Desarrolladores
 1. **Inicio rápido**: [QUICK_DEPLOY.md](./QUICK_DEPLOY.md)

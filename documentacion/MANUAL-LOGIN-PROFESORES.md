@@ -118,24 +118,6 @@ Si tienes dificultades con Phantom, usa el **login tradicional**:
 
 ---
 
-## 🆘 Contacto de Soporte
-
-Si sigues teniendo problemas:
-
-### **Contacto Directo:**
-- **Estudiante**: [Tu nombre y email]
-- **WhatsApp**: [Tu número] (respuesta rápida)
-- **Email**: [Tu email académico]
-
-### **Información para Soporte:**
-Al contactar, proporciona:
-1. **Navegador usado** (Chrome, Firefox, etc.)
-2. **Mensaje de error** específico
-3. **Pantalla donde ocurre** el problema
-4. **Captura de pantalla** si es posible
-
----
-
 ## 🎥 Video Tutorial (Opcional)
 
 > 💡 **Sugerencia**: Puedes crear un video corto (2-3 minutos) mostrando estos pasos para complementar este manual.
@@ -148,16 +130,16 @@ Al contactar, proporciona:
 
 ---
 
-## ✅ Checklist de Verificación
+## ✅ Checklist Final
 
-Marca cuando completes cada paso:
+Tras seguir este manual:
 
-- [ ] Phantom instalado en el navegador
-- [ ] Wallet creada y configurada
-- [ ] Frase de recuperación guardada en lugar seguro
-- [ ] Conexión exitosa a la plataforma Solana Learn
-- [ ] Acceso a funciones de instructor
-- [ ] Datos de contacto guardados para soporte
+- [ ] Phantom Wallet instalado y configurado
+- [ ] Acceso exitoso a la plataforma (https://solanalearn.up.railway.app)
+- [ ] Funcionalidades básicas verificadas
+- [ ] Screenshots tomados (opcional, para reportes)
+
+¡Listo para evaluar el proyecto! 🎉
 
 ---
 

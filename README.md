@@ -10,7 +10,6 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-7+-green)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple)
 ![Responsive](https://img.shields.io/badge/Responsive-✓-success)
-![WAI-A](https://img.shields.io/badge/Accesibilidad-WAI--A-success)
 
 **🌐 [DEMO EN VIVO](https://solanalearn.up.railway.app)** | **📁 [REPOSITORIO](https://github.com/vicrii/TFG)**
 
@@ -154,7 +153,7 @@ graph TB
 
 #### **Instructor**
 1. **Login** → Panel de instructor
-2. **Crear Curso** → Editor con IA
+2. **Crear Curso** → Editor avanzado
 3. **Gestionar Contenido** → Lecciones, evaluaciones
 4. **Monitorear** → Analytics y progreso
 5. **Moderar** → Comentarios y consultas
@@ -316,7 +315,7 @@ erDiagram
 
 ---
 
-## 💻 Cumplimiento Criterios DAW
+## 💻 Descripción de la Plataforma
 
 ### **🎨 Diseño de Interfaces**
 
@@ -344,13 +343,6 @@ erDiagram
 - **Breakpoints**: 576px, 768px, 992px, 1200px, 1400px
 - **Bootstrap 5**: Grid system y componentes responsive
 - **Flexible Layout**: CSS Grid y Flexbox
-
-#### **✅ Accesibilidad WAI-A**
-- **Navegación por teclado**: Tab index y focus management
-- **Screen readers**: ARIA labels y roles
-- **Contraste**: Ratios WCAG AA (4.5:1)
-- **Texto alternativo**: Alt tags descriptivos
-- **Formularios**: Labels asociados y validación
 
 #### **✅ Bootstrap Justificación**
 - **Rapid prototyping**: Desarrollo rápido de interfaces
@@ -523,10 +515,7 @@ const requireRole = (role: string) => (req, res, next) => {
 │   └── package.json
 │
 ├── docker-compose.yml        # Orquestación
-├── README.md                 # Este archivo
-└── docs/                     # Documentación
-    ├── user-manual/          # Manual de usuario
-    └── api/                  # Documentación API
+└── README.md                 # Documentación principal
 ```
 
 ---
@@ -559,35 +548,10 @@ npm run dev
 
 ---
 
-## 📖 Documentación
-
-| Documento | Ubicación |
-|-----------|-----------|
-| **Manual de Usuario** | [docs/user-manual/README.md](docs/user-manual/README.md) |
-| **Documentación API** | [docs/api/README.md](docs/api/README.md) |
-
----
-
-## 🧪 Testing
-
-```bash
-# Frontend
-cd front && npm test
-
-# Backend
-cd back && npm test
-
-# E2E
-npm run test:e2e
-```
-
----
-
 ## 🔗 Enlaces Importantes
 
 - **🌐 Demo**: https://solanalearn.up.railway.app
 - **📂 Repositorio**: https://github.com/vicrii/TFG
-- **📧 Soporte**: soporte@plataforma-educativa.com
 
 ---
 
@@ -603,6 +567,6 @@ MIT License - Ver [LICENSE](LICENSE) para más detalles.
 
 *Cumpliendo todos los criterios específicos de DAW*
 
-**[📖 Docs](docs/)** | **[🚀 Demo](https://solanalearn.up.railway.app)**
+**[🚀 Demo](https://solanalearn.up.railway.app)**
 
 </div> 

@@ -66,12 +66,13 @@ docker-compose ps
 
 ## 📝 Variables de Entorno Opcionales
 
-Crear archivo `.env` en la raíz para personalizar:
+```bash
+# Archivo: back/.env (opcional)
+JWT_SECRET=tu-secreto-jwt
+CORS_ORIGIN=http://localhost:5173
 
-```env
-# APIs opcionales
-OPENAI_API_KEY=tu-clave-openai
-YOUTUBE_API_KEY=tu-clave-youtube
+# Solo si quieres usar funcionalidades específicas
+DB_NAME=plataforma_educativa
 ```
 
 ## ❗ Troubleshooting

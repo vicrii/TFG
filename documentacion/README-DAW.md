@@ -10,7 +10,6 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-7+-green)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple)
 ![Responsive](https://img.shields.io/badge/Responsive-✓-success)
-![WAI-A](https://img.shields.io/badge/Accesibilidad-WAI--A-success)
 
 **🌐 [DEMO EN VIVO](https://solanalearn.up.railway.app)** | **📁 [REPOSITORIO](https://github.com/vicrii/TFG)**
 
@@ -259,12 +258,6 @@ erDiagram
 - Breakpoints: 576px, 768px, 992px, 1200px
 - CSS Grid y Flexbox
 
-#### **✅ Accesibilidad WAI-A**
-- Navegación por teclado
-- ARIA labels y roles
-- Contraste WCAG AA (4.5:1)
-- Alt tags descriptivos
-
 #### **✅ Bootstrap Justificación**
 - Rapid prototyping
 - Componentes consistentes
@@ -488,7 +481,6 @@ npm run test:e2e
 
 - **🌐 Demo**: https://solanalearn.up.railway.app
 - **📂 Repositorio**: https://github.com/vicrii/TFG
-- **📧 Soporte**: soporte@plataforma-educativa.com
 
 ---
 

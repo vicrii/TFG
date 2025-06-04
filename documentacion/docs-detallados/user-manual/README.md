@@ -176,16 +176,6 @@ Bienvenido a la **Plataforma de Aprendizaje Blockchain**, una aplicación web mo
    - Requisitos previos
    - Duración estimada
 
-#### **Creación Automática con IA**
-1. **Desde YouTube**:
-   - Pegar URL del video
-   - Configurar número de lecciones
-   - La IA genera contenido automáticamente
-2. **Desde Texto**:
-   - Proporcionar contenido base
-   - Seleccionar tipo de curso
-   - Generación automática de estructura
-
 ### **📝 Gestión de Lecciones**
 
 #### **Crear Lección Manual**
@@ -267,20 +257,6 @@ Bienvenido a la **Plataforma de Aprendizaje Blockchain**, una aplicación web mo
 - **Tablet**: Menú colapsable
 - **Mobile**: Hamburger menu con gestos
 
-### **♿ Accesibilidad (WAI-A)**
-
-#### **Navegación por Teclado**
-- **Tab**: Navegación secuencial
-- **Enter/Space**: Activar elementos
-- **Escape**: Cerrar modales
-- **Flechas**: Navegación en listas
-
-#### **Compatibilidad con Lectores**
-- **ARIA labels**: Elementos etiquetados
-- **Roles semánticos**: HTML5 estructurado
-- **Alt texts**: Imágenes descritas
-- **Contraste**: Ratios WCAG AA (4.5:1)
-
 ### **🔍 Funcionalidades Web Modernas**
 
 #### **HTML5 Características**
@@ -323,71 +299,11 @@ Bienvenido a la **Plataforma de Aprendizaje Blockchain**, una aplicación web mo
 
 #### **Métodos Disponibles**
 1. **Email/Contraseña**: Tradicional con hash bcrypt
-2. **Wallet Blockchain**: Solana, Phantom, Solflare
-3. **Social Login**: Google, GitHub (si está configurado)
+2. **Wallet Solana**: Phantom o billeteras compatibles
 
-#### **Recuperación de Cuenta**
+### **🔄 Opciones de Recuperación**
 1. **Contraseña olvidada**: Email de recuperación
-2. **Wallet perdida**: Proceso de verificación
-3. **Soporte técnico**: Asistencia personalizada
-
----
-
-## 📞 Soporte y Ayuda
-
-### **🆘 Problemas Comunes**
-
-#### **No puedo iniciar sesión**
-1. Verificar email y contraseña
-2. Revisar conexión a internet
-3. Limpiar caché del navegador
-4. Probar en navegador diferente
-
-#### **El video no se reproduce**
-1. Verificar conexión a internet
-2. Actualizar navegador
-3. Desactivar bloqueador de anuncios
-4. Probar en modo incógnito
-
-#### **Progreso no se guarda**
-1. Verificar que estás logueado
-2. Completar la lección completamente
-3. Esperar confirmación visual
-4. Recargar página si es necesario
-
-#### **Problemas con ejercicios de código**
-1. Verificar sintaxis del código
-2. Revisar casos de prueba
-3. Leer mensajes de error
-4. Consultar documentación
-
-### **📧 Contacto y Soporte**
-
-#### **Canales de Ayuda**
-- **Email**: soporte@plataforma-educativa.com
-- **Chat en vivo**: Disponible 9-18h (si está implementado)
-- **FAQ**: Preguntas frecuentes en la plataforma
-- **Foros**: Comunidad de usuarios (si está implementado)
-
-#### **Reportar Problemas**
-1. **Descripción detallada**: Qué estabas haciendo
-2. **Screenshots**: Imágenes del problema
-3. **Navegador**: Versión y tipo
-4. **Dispositivo**: Desktop/móvil/tablet
-
-### **🎓 Recursos Adicionales**
-
-#### **Documentación Técnica**
-- **API Reference**: Para desarrolladores
-- **Guías avanzadas**: Funcionalidades específicas
-- **Tutoriales**: Videos y textos paso a paso
-- **Blog**: Novedades y updates
-
-#### **Comunidad**
-- **Discord**: Servidor de la comunidad
-- **GitHub**: Código fuente y issues
-- **Newsletter**: Actualizaciones mensuales
-- **Redes sociales**: Twitter, LinkedIn
+2. **Verificación 2FA**: Códigos de respaldo
 
 ---
 
@@ -400,13 +316,11 @@ Bienvenido a la **Plataforma de Aprendizaje Blockchain**, una aplicación web mo
 - ✅ Cursos y lecciones básicas
 - ✅ Sistema de evaluaciones
 - ✅ Responsive design
-- ✅ Accesibilidad WAI-A
 
 #### **Próximas Funcionalidades**
 - 🔄 Certificaciones blockchain
 - 🔄 Integración con más wallets
 - 🔄 Chat en tiempo real
-- 🔄 Gamificación avanzada
 - 🔄 Mobile app nativa
 
 ### **📱 Progressive Web App**
@@ -423,4 +337,12 @@ Bienvenido a la **Plataforma de Aprendizaje Blockchain**, una aplicación web mo
 
 ---
 
-*¡Esperamos que disfrutes aprendiendo en nuestra plataforma! 🚀* 
+*¡Esperamos que disfrutes aprendiendo en nuestra plataforma! 🚀*
+
+5. **Reiniciar Aplicación**: Recargar página completamente
+
+¡Ahora ya tienes todos los conocimientos para usar la plataforma de manera efectiva! 🎓
+
+---
+
+**¿Necesitas más información sobre algún tema específico?** Consulta las demás secciones de la documentación para guías más detalladas. 
