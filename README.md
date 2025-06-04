@@ -24,8 +24,7 @@
 | Servicio | Puerto | URL Local | URL Producción |
 |----------|---------|-----------|----------------|
 | **Frontend** | 5173 | http://localhost:5173 | https://solanalearn.up.railway.app |
-| **Backend API** | 5000 | http://localhost:5000/api | https://solanalearn.up.railway.app/api |
-| **MongoDB** | 27017 | mongodb://localhost:27017 | MongoDB Atlas |
+| **Backend API** | 5000 | http://localhost:5000/api | https://solanalearn.up.railway.app/api
 
 ### 🚀 **Instrucciones de Uso**
 
@@ -65,7 +64,7 @@ npm run dev
 - **Instructor**: Puede crear cursos, ver analytics, gestionar estudiantes
 - **Estudiante**: Puede inscribirse, ver progreso, completar lecciones
 
-### 📝 **Notas Adicionales**
+### 📝 **Notas Adicionales**n
 - La aplicación soporta autenticación tradicional y blockchain (Solana)
 - Responsive design compatible con móviles, tablets y desktop
 - HTTPS configurado en producción con certificados SSL
@@ -123,7 +122,7 @@ graph TB
 - **Express.js**: Framework web para Node.js
 - **REST API**: Endpoints estructurados siguiendo estándares
 - **Middleware personalizado**: Autenticación, validación, CORS
-- **Gestión de sesiones**: JWT tokens y cookies seguras
+- **Gestión de usuarios**: Sistema de login y permisos
 
 #### **💾 MODELO (Datos)**
 - **MongoDB**: Base de datos NoSQL para flexibilidad
@@ -139,7 +138,6 @@ graph TB
 | **👑 Admin** | • CRUD usuarios<br>• Gestión completa cursos<br>• Analytics globales<br>• Configuración sistema | Total |
 | **👨‍🏫 Instructor** | • Crear/editar cursos<br>• Gestionar estudiantes<br>• Ver analytics propios | Cursos propios |
 | **👨‍🎓 Estudiante** | • Ver cursos<br>• Completar lecciones<br>• Realizar evaluaciones | Cursos inscritos |
-| **👤 Visitante** | • Ver catálogo público<br>• Registro/login | Público |
 
 ### **🔄 Flujos de Usuario Principales**
 
@@ -156,7 +154,6 @@ graph TB
 2. **Crear Curso** → Editor avanzado
 3. **Gestionar Contenido** → Lecciones, evaluaciones
 4. **Monitorear** → Analytics y progreso
-5. **Moderar** → Comentarios y consultas
 
 ---
 
@@ -183,29 +180,10 @@ graph TB
 │   ├── 📚 Cursos
 │   └── 📊 Analytics
 │
-└── 🔐 AUTH
-    ├── 🚪 Login (/login)
-    └── 📝 Registro (/register)
+└── 🔐 LOGIN (/login)
 ```
 
-### **Navegación Responsive**
 
-#### **Desktop (≥1200px)**
-- Navbar completa con todos los enlaces
-- Sidebar para navegación de curso
-- Breadcrumbs para orientación
-
-#### **Tablet (768px-1199px)**
-- Navbar colapsable
-- Navegación simplificada
-- Contenido optimizado
-
-#### **Mobile (≤767px)**
-- Hamburger menu
-- Navegación por gestos
-- Interfaz táctil optimizada
-
----
 
 ## 🗃️ Diseño de Base de Datos
 
@@ -327,7 +305,6 @@ erDiagram
 #### **✅ Multimedia**
 - **Videos integrados**: Reproductor personalizado con controles
 - **Imágenes optimizadas**: WebP, lazy loading, responsive images
-- **Audio**: Feedback de interacciones (opcional)
 - **SVG**: Iconos escalables y animaciones
 
 #### **✅ React Framework**
@@ -338,131 +315,14 @@ erDiagram
 - **TypeScript**: Tipado estático para mejor desarrollo
 - **Hooks**: Gestión moderna de estado
 
-#### **✅ Responsive Design**
-- **Mobile First**: Diseño optimizado para móviles primero
-- **Breakpoints**: 576px, 768px, 992px, 1200px, 1400px
-- **Bootstrap 5**: Grid system y componentes responsive
-- **Flexible Layout**: CSS Grid y Flexbox
 
-#### **✅ Bootstrap Justificación**
-- **Rapid prototyping**: Desarrollo rápido de interfaces
-- **Componentes consistentes**: Grid, botones, formularios
-- **Responsive nativo**: Mobile-first approach
-- **Comunidad**: Amplia documentación y soporte
 
-### **📱 Entornos Cliente**
 
-#### **✅ Validación Cliente**
-```typescript
-// Validación de formularios
-const validateForm = (data: FormData) => {
-  const errors: ValidationErrors = {};
-  
-  if (!data.email?.includes('@')) {
-    errors.email = 'Email inválido';
-  }
-  
-  if (data.password?.length < 6) {
-    errors.password = 'Mínimo 6 caracteres';
-  }
-  
-  return errors;
-};
-```
-
-#### **✅ Comunicación Asíncrona**
-```typescript
-// Fetch API con async/await
-const apiClient = {
-  async get<T>(url: string): Promise<T> {
-    const response = await fetch(url);
-    return response.json();
-  },
-  
-  async post<T>(url: string, data: any): Promise<T> {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    return response.json();
-  }
-};
-```
-
-### **🖥️ Entornos Servidor**
-
-#### **✅ Gestión Usuarios**
-```typescript
-// CRUD usuarios completo
-router.post('/users', createUser);
-router.get('/users', getUsers);
-router.put('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
-```
-
-#### **✅ Sesiones y Cookies**
-```typescript
-// JWT + cookies
-app.use(cookieParser());
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: true, httpOnly: true }
-}));
-```
-
-#### **✅ Base de Datos**
-```typescript
-// Mongoose con relaciones
-const CourseSchema = new Schema({
-  instructor: { type: ObjectId, ref: 'User' },
-  lessons: [{ type: ObjectId, ref: 'Lesson' }]
-});
-```
-
-#### **✅ MVC Pattern**
-```
-controllers/  # Lógica de negocio
-models/       # Esquemas de datos
-views/        # Componentes React
-routes/       # Endpoints API
-```
-
-#### **✅ Comunicación Segura**
-```typescript
-// HTTPS + cifrado
-app.use(helmet());
-app.use(cors({ credentials: true }));
-// SSL certificados configurados
-```
 
 ### **🔒 Servidor y Administración**
 
 #### **✅ Servidor Online**
-- **Railway**: Hosting en la nube con CI/CD
-- **Nginx**: Proxy reverso y servicio de archivos estáticos
-- **SSL/TLS**: Certificados automáticos
-- **CDN**: Cloudflare para optimización
-
-#### **✅ Acceso Cifrado**
-```nginx
-# SSL/TLS configurado
-ssl_protocols TLSv1.2 TLSv1.3;
-ssl_ciphers ECDHE-RSA-AES256-GCM-SHA512;
-```
-
-#### **✅ Restricción Acceso**
-```typescript
-// Middleware de roles
-const requireRole = (role: string) => (req, res, next) => {
-  if (req.user.role !== role) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
-  next();
-};
-```
+- **Railway**: Hosting en la nube
 
 ---
 
@@ -481,7 +341,6 @@ const requireRole = (role: string) => (req, res, next) => {
 - **Express.js**: Framework web
 - **MongoDB**: Base de datos NoSQL
 - **Mongoose**: ODM para MongoDB
-- **JWT**: Autenticación stateless
 
 ### **DevOps**
 - **Docker**: Containerización
